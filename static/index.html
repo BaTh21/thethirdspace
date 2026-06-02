@@ -709,21 +709,23 @@
                 })
                     .then(response => {
                         console.log('Response status:', response.status);
-                        if (!response.ok) {
-                            return response.text().then(text => {
-                                console.log('Error response body:', text);
-                                try {
-                                    const err = JSON.parse(text);
-                                    throw new Error(err.detail || `HTTP ${response.status}`);
-                                } catch {
-                                    throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
-                                }
-                            });
-                        }
-                        return response.json();
+                        // ✅ Always return JSON, even for errors
+                        return response.json().then(data => {
+                            if (!response.ok) {
+                                throw new Error(data.detail || `HTTP ${response.status}`);
+                            }
+                            return data;
+                        });
                     })
                     .then(data => {
                         console.log('Success response:', data);
+
+                        // ✅ Check if order was saved successfully
+                        if (data.order_id) {
+                            showToast("✅ Order saved! Thank you.", "#2b6e3c");
+                        } else {
+                            showToast("✅ Order received!", "#2b6e3c");
+                        }
 
                         // Build order summary HTML
                         let summaryHtml = `
@@ -792,6 +794,7 @@
                             if (placeOrderBtn) placeOrderBtn.onclick = placeOrder;
                         };
 
+                        // Clear cart and form fields
                         cart = [];
                         persistCart();
                         updateCartCount();
@@ -799,8 +802,6 @@
                         document.getElementById('custPhone').value = '';
                         document.getElementById('orderNotes').value = '';
                         renderCartModal();
-
-                        showToast("✅ Order saved! Thank you.", "#2b6e3c");
                     })
                     .catch(error => {
                         console.error('Order error:', error);
