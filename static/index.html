@@ -672,14 +672,14 @@
             function showToast(msg, bg = "#2c2418") { let t = document.querySelector('.toast-msg'); if (!t) { t = document.createElement('div'); t.className = 'toast-msg'; document.body.appendChild(t); } t.innerText = msg; t.style.background = bg; t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2000); }
             function placeOrder() {
                 if (cart.length === 0) {
-                    showToast("Cart is empty!", "#b55a2a");
+                    alert("Cart is empty!");
                     return;
                 }
                 const name = document.getElementById('custName')?.value.trim();
                 const phone = document.getElementById('custPhone')?.value.trim();
                 const notes = document.getElementById('orderNotes')?.value.trim();
                 if (!name || !phone) {
-                    showToast("Please enter name and phone", "#b45f2b");
+                    alert("Please enter name and phone");
                     return;
                 }
 
@@ -700,7 +700,6 @@
 
                 const placeBtn = document.getElementById('placeOrderBtn');
                 if (placeBtn) placeBtn.disabled = true;
-                showToast("Sending order...", "#5a3e2b");
 
                 fetch('https://thethirdspace-3.onrender.com/api/orders', {
                     method: 'POST',
@@ -708,8 +707,6 @@
                     body: JSON.stringify(orderData)
                 })
                     .then(response => {
-                        console.log('Response status:', response.status);
-                        // ✅ Always return JSON, even for errors
                         return response.json().then(data => {
                             if (!response.ok) {
                                 throw new Error(data.detail || `HTTP ${response.status}`);
@@ -718,15 +715,6 @@
                         });
                     })
                     .then(data => {
-                        console.log('Success response:', data);
-
-                        // ✅ Check if order was saved successfully
-                        if (data.order_id) {
-                            showToast("✅ Order saved! Thank you.", "#2b6e3c");
-                        } else {
-                            showToast("✅ Order received!", "#2b6e3c");
-                        }
-
                         // Build order summary HTML
                         let summaryHtml = `
             <div style="text-align:center; margin-bottom:15px;">
@@ -805,7 +793,7 @@
                     })
                     .catch(error => {
                         console.error('Order error:', error);
-                        showToast(`❌ ${error.message}`, "#b55a2a");
+                        alert(`Error: ${error.message}`);
                     })
                     .finally(() => {
                         if (placeBtn) placeBtn.disabled = false;
