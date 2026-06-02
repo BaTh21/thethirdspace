@@ -67,21 +67,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files (must exist inside backend/static/)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/{full_path:path}")
 async def serve_static(full_path: str):
     if full_path.startswith("api/"):
         raise HTTPException(status_code=404)
-    file_path = os.path.join("static", full_path)
+    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
+    file_path = os.path.join(static_dir, full_path)
     if os.path.isfile(file_path):
         return FileResponse(file_path)
-    return FileResponse("static/index.html")
+    return FileResponse(os.path.join(static_dir, "index.html"))
 
 @app.get("/")
 async def root():
-    return FileResponse("static/index.html")
+    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
+    return FileResponse(os.path.join(static_dir, "index.html"))
 
 @app.post("/api/orders")
 async def create_order(order: OrderCreate):
