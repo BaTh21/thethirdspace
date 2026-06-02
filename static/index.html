@@ -699,7 +699,7 @@
                 showToast("Sending order...", "#5a3e2b");
 
                 // ✅ Use absolute URL to your backend (port 5000)
-                fetch('/api/orders', {
+                fetch('https://thethirdspace-3.onrender.com/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)

@@ -647,7 +647,7 @@
                 if (placeBtn) placeBtn.disabled = true;
                 showToast("កំពុងផ្ញើការបញ្ជាទិញ...", "#5a3e2b");
 
-                fetch('/api/orders', {
+                fetch('https://thethirdspace-3.onrender.com/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
