@@ -670,66 +670,132 @@
             function renderCartModal() { const c = document.getElementById('cartItemsContainer'); const ts = document.getElementById('cartTotalValue'); if (!c) return; if (!cart.length) { c.innerHTML = `<div style="text-align:center;padding:2rem;">Your cart is empty.</div>`; if (ts) ts.innerText = "0.00"; return; } let html = '', tot = 0; cart.forEach((it, idx) => { let itt = it.price * it.quantity; tot += itt; html += `<div class="cart-item"><div><strong>${escapeHtml(it.name)}</strong><br><span style="font-size:12px">$${it.price.toFixed(2)} each</span></div><div class="cart-item-controls"><button class="qty-minus" data-index="${idx}">−</button><span style="width:28px;text-align:center">${it.quantity}</span><button class="qty-plus" data-index="${idx}">+</button><button class="remove-item" data-index="${idx}"><i class="fas fa-trash-alt"></i></button></div><div style="min-width:70px;text-align:right">$${itt.toFixed(2)}</div></div>`; }); c.innerHTML = html; if (ts) ts.innerText = tot.toFixed(2); document.querySelectorAll('.qty-minus').forEach(b => b.addEventListener('click', (e) => updateQuantity(parseInt(b.dataset.index), -1))); document.querySelectorAll('.qty-plus').forEach(b => b.addEventListener('click', (e) => updateQuantity(parseInt(b.dataset.index), 1))); document.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', (e) => removeCartItem(parseInt(b.dataset.index)))); }
             function escapeHtml(s) { return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
             function showToast(msg, bg = "#2c2418") { let t = document.querySelector('.toast-msg'); if (!t) { t = document.createElement('div'); t.className = 'toast-msg'; document.body.appendChild(t); } t.innerText = msg; t.style.background = bg; t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2000); }
-            function placeOrder() {
-                if (cart.length === 0) {
-                    showToast("Cart is empty!", "#b55a2a");
-                    return;
-                }
-                const name = document.getElementById('custName')?.value.trim();
-                const phone = document.getElementById('custPhone')?.value.trim();
-                const notes = document.getElementById('orderNotes')?.value.trim();
-                if (!name || !phone) {
-                    showToast("Please enter name and phone", "#b45f2b");
-                    return;
-                }
+           function placeOrder() {
+    if (cart.length === 0) {
+        showToast("Cart is empty!", "#b55a2a");
+        return;
+    }
+    const name = document.getElementById('custName')?.value.trim();
+    const phone = document.getElementById('custPhone')?.value.trim();
+    const notes = document.getElementById('orderNotes')?.value.trim();
+    if (!name || !phone) {
+        showToast("Please enter name and phone", "#b45f2b");
+        return;
+    }
 
-                const orderData = {
-                    customer_name: name,
-                    phone: phone,
-                    notes: notes,
-                    items: cart.map(item => ({
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity
-                    }))
-                };
+    const orderItems = cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        total: item.price * item.quantity
+    }));
+    const orderTotal = orderItems.reduce((sum, item) => sum + item.total, 0);
 
-                const placeBtn = document.getElementById('placeOrderBtn');
-                if (placeBtn) placeBtn.disabled = true;
-                showToast("Sending order...", "#5a3e2b");
+    const orderData = {
+        customer_name: name,
+        phone: phone,
+        notes: notes,
+        items: orderItems
+    };
 
-                // ✅ Use absolute URL to your backend (port 5000)
-                fetch('https://thethirdspace-3.onrender.com/api/orders', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(err => { throw new Error(err.detail || 'Server error'); });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        showToast("✅ Order saved! Thank you.", "#2b6e3c");
-                        cart = [];
-                        persistCart();
-                        updateCartCount();
-                        document.getElementById('cartModal').style.display = 'none';
-                        renderCartModal();
-                        // Clear form fields
-                        document.getElementById('custName').value = '';
-                        document.getElementById('custPhone').value = '';
-                        document.getElementById('orderNotes').value = '';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast("❌ Failed to save order. Please try again.", "#b55a2a");
-                    })
-                    .finally(() => {
-                        if (placeBtn) placeBtn.disabled = false;
-                    });
-            }
+    const placeBtn = document.getElementById('placeOrderBtn');
+    if (placeBtn) placeBtn.disabled = true;
+    showToast("Sending order...", "#5a3e2b");
+
+    fetch('https://thethirdspace-3.onrender.com/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.detail || 'Server error'); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Build order summary HTML
+        let summaryHtml = `
+            <div style="text-align:center; margin-bottom:15px;">
+                <i class="fas fa-check-circle" style="font-size:48px; color:#2b6e3c;"></i>
+                <h3 style="color:#2b6e3c; margin-top:10px;">Order Confirmed!</h3>
+            </div>
+            <div style="max-height:300px; overflow-y:auto; margin-bottom:15px;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #e6cfad;">
+                            <th style="text-align:left; padding:8px;">Item</th>
+                            <th style="text-align:center; padding:8px;">Qty</th>
+                            <th style="text-align:right; padding:8px;">Price</th>
+                            <th style="text-align:right; padding:8px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        orderItems.forEach(item => {
+            summaryHtml += `
+                <tr style="border-bottom:1px solid #f0e0ca;">
+                    <td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td>
+                    <td style="text-align:center; padding:8px;">${item.quantity}</td>
+                    <td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td>
+                    <td style="text-align:right; padding:8px;">$${item.total.toFixed(2)}</td>
+                </tr>
+            `;
+        });
+        
+        summaryHtml += `
+                    </tbody>
+                    <tfoot>
+                        <tr style="border-top:2px solid #e6cfad;">
+                            <td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td>
+                            <td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;">
+                <p style="margin:5px 0;"><strong>👤 Customer:</strong> ${escapeHtml(name)}</p>
+                <p style="margin:5px 0;"><strong>📞 Phone:</strong> ${escapeHtml(phone)}</p>
+                ${notes ? `<p style="margin:5px 0;"><strong>📝 Notes:</strong> ${escapeHtml(notes)}</p>` : ''}
+            </div>
+            <div style="text-align:center;">
+                <button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b; margin-top:0;">Continue Shopping</button>
+            </div>
+        `;
+        
+        // Show summary in modal
+        const modalContent = document.querySelector('.cart-modal-content');
+        const originalContent = modalContent.innerHTML;
+        modalContent.innerHTML = summaryHtml;
+        
+        document.getElementById('closeSuccessModal').onclick = () => {
+            modalContent.innerHTML = originalContent;
+            document.getElementById('cartModal').style.display = 'none';
+            // Reattach event listeners
+            const closeBtn = document.getElementById('closeCartModalBtn');
+            if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+            document.getElementById('placeOrderBtn').onclick = placeOrder;
+        };
+        
+        // Clear cart and form
+        cart = [];
+        persistCart();
+        updateCartCount();
+        document.getElementById('custName').value = '';
+        document.getElementById('custPhone').value = '';
+        document.getElementById('orderNotes').value = '';
+        
+        showToast("✅ Order saved! Thank you.", "#2b6e3c");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast("❌ Failed to save order. Please try again.", "#b55a2a");
+    })
+    .finally(() => {
+        if (placeBtn) placeBtn.disabled = false;
+    });
+}
             function injectAddButtons() { document.querySelectorAll('.card').forEach(card => { if (card.querySelector('.add-cart-btn')) return; let title = card.querySelector('h3')?.innerText.trim(); let priceElem = card.querySelector('.price'); if (!title || !priceElem) return; let priceVal = parsePrice(priceElem.innerText); let btn = document.createElement('button'); btn.className = 'add-cart-btn'; btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Book now / Add'; btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(title, priceVal); }); priceElem.insertAdjacentElement('afterend', btn); }); }
             function buildUI() { if (document.getElementById('cartFloatBtn')) return; let float = document.createElement('div'); float.id = 'cartFloatBtn'; float.className = 'cart-float'; float.innerHTML = '<i class="fas fa-shopping-bag"></i><span class="cart-count">0</span>'; document.body.appendChild(float); let modal = document.createElement('div'); modal.id = 'cartModal'; modal.className = 'cart-modal'; modal.innerHTML = `<div class="cart-modal-content"><button class="close-modal" id="closeCartModalBtn">&times;</button><h2><i class="fas fa-coffee"></i> Your Order Basket</h2><div id="cartItemsContainer" class="cart-items-list"></div><div class="cart-total">Total: $<span id="cartTotalValue">0.00</span></div><div class="booking-form"><input type="text" id="custName" placeholder="Your full name *"><input type="tel" id="custPhone" placeholder="Phone / Telegram *"><textarea id="orderNotes" rows="2" placeholder="Special requests..."></textarea><button id="placeOrderBtn" class="place-order-btn">Confirm booking</button></div></div>`; document.body.appendChild(modal); float.onclick = () => { renderCartModal(); modal.style.display = 'flex'; }; document.getElementById('closeCartModalBtn').onclick = () => modal.style.display = 'none'; window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; }; document.getElementById('placeOrderBtn').onclick = placeOrder; }
             function init() { loadCart(); buildUI(); injectAddButtons(); updateCartCount(); new MutationObserver(() => injectAddButtons()).observe(document.body, { childList: true, subtree: true }); }
