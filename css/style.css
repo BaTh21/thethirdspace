@@ -1,0 +1,301 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Poppins', 'Khmer OS', 'Noto Sans Khmer', system-ui, sans-serif;
+    background: #fef7e8;
+    color: #2c2418;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 244, 230, 0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid #e6d5b8;
+    padding: 0.8rem 2rem;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #5a3e2b;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+    background: #c7a66b;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+}
+
+.flag-btns {
+    display: flex;
+    gap: 12px;
+}
+
+.flag {
+    width: 42px;
+    border-radius: 30px;
+    transition: 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.flag:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ========== MAIN CONTENT ========== */
+.wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 40px;
+}
+
+/* ========== HERO SECTION ========== */
+.hero {
+    text-align: center;
+    margin: 20px 0 40px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    background: linear-gradient(135deg, #8b5e34, #d4a373, #b47c48);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+}
+
+/* ========== PAGE TITLE (for cake/drink/contact pages) ========== */
+.page-title {
+    text-align: center;
+    font-size: 3rem;
+    margin: 30px 0 40px;
+    color: #6b3e1a;
+    position: relative;
+}
+
+.page-title::after {
+    content: '';
+    width: 100px;
+    height: 4px;
+    background: #d4a373;
+    display: block;
+    margin: 12px auto 0;
+    border-radius: 4px;
+}
+
+/* ========== CONCEPT CARD (homepage only) ========== */
+.concept-card {
+    background: linear-gradient(115deg, rgba(0,0,0,0.7), rgba(0,0,0,0.45)), 
+                url('../images/coffee-shop-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 48px;
+    padding: 3rem;
+    margin: 30px 0;
+    color: #fff9ef;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.3);
+}
+
+.concept-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 28px 42px -12px rgba(0,0,0,0.4);
+}
+
+.concept-card p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
+
+.signature {
+    text-align: right;
+    margin-top: 25px;
+    font-style: italic;
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+/* ========== SECTION TITLES ========== */
+.section-title {
+    font-size: 2.8rem;
+    text-align: center;
+    margin: 50px 0 30px;
+    color: #6b3e1a;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    width: 100px;
+    height: 4px;
+    background: #d4a373;
+    display: block;
+    margin: 12px auto 0;
+    border-radius: 4px;
+}
+
+/* ========== PRODUCT GRID ========== */
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 35px;
+    margin: 40px 0;
+}
+
+.card {
+    background: white;
+    width: 280px;
+    border-radius: 32px;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border: 1px solid #f0e0ca;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 28px 35px -12px rgba(85, 48, 18, 0.25);
+    background: #fffbf5;
+    border-color: #dbb98a;
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 28px;
+    transition: 0.2s;
+}
+
+.card:hover img {
+    transform: scale(1.02);
+}
+
+.card h3 {
+    font-size: 1.4rem;
+    margin: 15px 0 8px;
+    color: #4d2f15;
+}
+
+.price {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #b2703a;
+    background: #f9eedf;
+    display: inline-block;
+    padding: 0.3rem 1.2rem;
+    border-radius: 60px;
+    margin-top: 8px;
+    transition: 0.2s;
+}
+
+.card:hover .price {
+    background: #e8d5bb;
+    color: #8b541e;
+}
+
+/* ========== CONTACT SECTION ========== */
+.contact-card {
+    background: #e8d9c4;
+    border-radius: 48px;
+    padding: 2.5rem;
+    margin: 50px 0 30px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.contact-card:hover {
+    background: #e2cfb0;
+    transform: scale(0.99);
+}
+
+.contact-card h2 {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    color: #553a1f;
+}
+
+.contact-info p {
+    font-size: 1.2rem;
+    margin: 12px 0;
+    font-weight: 500;
+}
+
+.contact-info span {
+    background: white;
+    padding: 0.3rem 1.2rem;
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.badge {
+    background: white;
+    padding: 0.6rem 1.8rem;
+    border-radius: 60px;
+    font-weight: 600;
+    margin-top: 20px;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.badge:hover {
+    background: #aa7c4a;
+    color: white;
+    cursor: pointer;
+}
+
+/* ========== FOOTER ========== */
+footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 2px solid #e6cfad;
+    margin-top: 30px;
+    color: #7e5a3b;
+    font-size: 0.95rem;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+    .wrapper { padding: 20px; }
+    .hero h1 { font-size: 2.8rem; }
+    .page-title { font-size: 2.2rem; }
+    .section-title { font-size: 2.2rem; }
+    .concept-card p { font-size: 1rem; }
+    .concept-card { padding: 1.8rem; }
+    .card { width: 250px; }
+    .contact-info p { font-size: 1rem; }
+    .nav-link { font-size: 1rem; padding: 0.4rem 0.8rem; }
+}
+
+@media (max-width: 600px) {
+    .card { width: 100%; max-width: 280px; }
+    .hero h1 { font-size: 2.2rem; }
+    .page-title { font-size: 1.8rem; }
+}
