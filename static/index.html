@@ -788,11 +788,10 @@
                         document.getElementById('custPhone').value = '';
                         document.getElementById('orderNotes').value = '';
 
-                        showToast("✅ Order saved! Thank you.", "#2b6e3c");
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        showToast("❌ Failed to save order. Please try again.", "#b55a2a");
+                        showToast(`Error: ${error.message}`, "#b55a2a");
                     })
                     .finally(() => {
                         if (placeBtn) placeBtn.disabled = false;
