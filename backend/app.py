@@ -8,10 +8,8 @@ from typing import List
 import psycopg2
 from contextlib import asynccontextmanager
 
-# ----- Database -----
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# ----- Pydantic models -----
 class OrderItem(BaseModel):
     name: str
     price: float
@@ -23,13 +21,11 @@ class OrderCreate(BaseModel):
     notes: str = ""
     items: List[OrderItem]
 
-# ----- Helper -----
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create tables automatically on startup
     if DATABASE_URL:
         try:
             conn = get_db_connection()
@@ -61,10 +57,8 @@ async def lifespan(app: FastAPI):
             print(f"⚠️ Table creation warning: {e}")
     yield
 
-# ----- FastAPI app -----
 app = FastAPI(lifespan=lifespan)
 
-# CORS – allow all for simplicity (same‑origin is fine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -73,10 +67,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files
+# Serve static files (must exist inside backend/static/)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Catch‑all route to serve frontend pages
 @app.get("/{full_path:path}")
 async def serve_static(full_path: str):
     if full_path.startswith("api/"):
@@ -90,7 +83,6 @@ async def serve_static(full_path: str):
 async def root():
     return FileResponse("static/index.html")
 
-# API endpoint
 @app.post("/api/orders")
 async def create_order(order: OrderCreate):
     try:
