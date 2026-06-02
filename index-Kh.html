@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Same CSS as English version – copy from index.html */
+        /* Same CSS as index.html – copy exactly */
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Segoe UI','Poppins','Khmer OS','Noto Sans Khmer',system-ui,sans-serif; background:#fef7e8; color:#2c2418; }
         .navbar { position:sticky; top:0; z-index:100; background:rgba(255,244,230,0.96); backdrop-filter:blur(10px); border-bottom:2px solid #e6d5b8; padding:0.8rem 2rem; }
@@ -145,7 +145,7 @@
             link.addEventListener('click', () => navLinks.classList.remove('show'));
         });
     }
-    // Cart system (Khmer messages)
+    // Khmer cart script – identical to English but with Khmer messages
     (function() {
         let cart = [];
         function parsePrice(priceStr) { let m = priceStr.match(/[\d\.]+/); return m ? parseFloat(m[0]) : 0; }
