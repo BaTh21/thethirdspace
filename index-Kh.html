@@ -7,14 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ========== FULL STYLES (logo + centered nav + hamburger + cart) ========== */
+        /* Same CSS as English version – copy from index.html */
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Segoe UI','Poppins','Khmer OS','Noto Sans Khmer',system-ui,sans-serif; background:#fef7e8; color:#2c2418; }
         .navbar { position:sticky; top:0; z-index:100; background:rgba(255,244,230,0.96); backdrop-filter:blur(10px); border-bottom:2px solid #e6d5b8; padding:0.8rem 2rem; }
         .nav-container { max-width:1400px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-        .logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
-        .logo img { height:45px; width:auto; }
-        .logo span { font-size:1.3rem; font-weight:700; color:#5a3e2b; font-family:'Playfair Display',serif; }
+        .logo { display:flex; align-items:center; gap:8px; text-decoration:none; font-size:1.3rem; font-weight:700; color:#5a3e2b; font-family:'Playfair Display',serif; }
         .hamburger { display:none; font-size:1.8rem; background:none; border:none; color:#5a3e2b; cursor:pointer; padding:0.5rem; }
         .nav-links { display:flex; flex-wrap:wrap; align-items:center; gap:2rem; transition:all 0.3s ease; margin:0 auto; }
         .nav-link { text-decoration:none; color:#5a3e2b; font-weight:600; font-size:1.2rem; padding:0.5rem 1.2rem; border-radius:40px; transition:all 0.25s ease; }
@@ -32,7 +30,7 @@
         .wrapper { max-width:1400px; margin:0 auto; padding:30px 40px; }
         .hero { text-align:center; margin:20px 0 40px; }
         .hero h1 { font-size:4rem; background:linear-gradient(135deg,#8b5e34,#d4a373,#b47c48); background-clip:text; -webkit-background-clip:text; color:transparent; letter-spacing:-0.5px; }
-        .concept-card { background:linear-gradient(115deg,rgba(0,0,0,0.7),rgba(0,0,0,0.45)), url('../images/coffee-shop-bg.jpg'); background-size:cover; background-position:center; border-radius:48px; padding:3rem; margin:30px 0; color:#fff9ef; transition:transform 0.3s,box-shadow 0.3s; box-shadow:0 20px 35px -10px rgba(0,0,0,0.3); }
+        .concept-card { background:linear-gradient(115deg,rgba(0,0,0,0.7),rgba(0,0,0,0.45)), url('images/coffee-shop-bg.jpg'); background-size:cover; background-position:center; border-radius:48px; padding:3rem; margin:30px 0; color:#fff9ef; transition:transform 0.3s,box-shadow 0.3s; box-shadow:0 20px 35px -10px rgba(0,0,0,0.3); }
         .concept-card:hover { transform:scale(1.01); }
         .concept-card p { font-size:1.3rem; line-height:1.6; text-shadow:1px 1px 4px rgba(0,0,0,0.5); }
         .signature { text-align:right; margin-top:25px; font-style:italic; font-size:1.2rem; opacity:0.95; }
@@ -41,17 +39,19 @@
         .grid { display:flex; flex-wrap:wrap; justify-content:center; gap:35px; margin:40px 0; }
         .card { background:white; width:280px; border-radius:32px; text-align:center; padding:1.5rem 1rem; box-shadow:0 12px 24px rgba(0,0,0,0.06); transition:all 0.35s cubic-bezier(0.2,0.9,0.4,1.1); border:1px solid #f0e0ca; cursor:pointer; }
         .card:hover { transform:translateY(-12px); background:#fffbf5; border-color:#dbb98a; }
-        .card img { width:100%; height:200px; object-fit:cover; border-radius:28px; }
+        .card img { width:100%; height:200px; object-fit:cover; border-radius:28px; background:#f0e0ca; }
         .card h3 { font-size:1.4rem; margin:15px 0 8px; color:#4d2f15; }
         .price { font-size:1.7rem; font-weight:800; color:#b2703a; background:#f9eedf; display:inline-block; padding:0.3rem 1.2rem; border-radius:60px; margin-top:8px; }
-        .contact-card { background:#e8d9c4; border-radius:48px; padding:2.5rem; margin:50px 0 30px; text-align:center; }
+        .contact-card { background:#e8d9c4; border-radius:48px; padding:2.5rem; margin:50px 0 30px; text-align:center; transition:all 0.3s; }
+        .contact-card:hover { background:#e2cfb0; transform:scale(0.99); }
+        .contact-card h2 { font-size:2rem; margin-bottom:1.2rem; color:#553a1f; }
         .contact-info p { font-size:1.2rem; margin:12px 0; font-weight:500; }
         .contact-info span { background:white; padding:0.3rem 1.2rem; border-radius:50px; display:inline-block; }
-        .badge { background:white; padding:0.6rem 1.8rem; border-radius:60px; font-weight:600; margin-top:20px; display:inline-block; }
+        .badge { background:white; padding:0.6rem 1.8rem; border-radius:60px; font-weight:600; margin-top:20px; display:inline-block; transition:0.2s; }
+        .badge:hover { background:#aa7c4a; color:white; cursor:pointer; }
         footer { text-align:center; padding:2rem; border-top:2px solid #e6cfad; margin-top:30px; color:#7e5a3b; }
         @media (max-width:900px) { .wrapper { padding:20px; } .hero h1 { font-size:2.8rem; } .section-title { font-size:2.2rem; } .concept-card p { font-size:1rem; } .concept-card { padding:1.8rem; } .card { width:250px; } }
         @media (max-width:600px) { .card { width:100%; max-width:280px; } .hero h1 { font-size:2.2rem; } }
-        /* cart styles */
         .add-cart-btn { background:#5a3e2b; border:none; padding:8px 18px; border-radius:40px; font-weight:600; font-size:0.85rem; color:#fef3e4; cursor:pointer; display:inline-flex; align-items:center; gap:8px; margin:6px 0 12px; }
         .add-cart-btn:hover { background:#b45f2b; transform:scale(0.96); }
         .cart-float { position:fixed; bottom:28px; right:28px; background:#d97a2b; width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:26px; box-shadow:0 12px 24px rgba(0,0,0,0.2); cursor:pointer; z-index:200; background:linear-gradient(145deg,#c46a2c,#ac5a22); }
@@ -63,20 +63,18 @@
         .cart-item { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eedbc8; padding:12px 0; flex-wrap:wrap; gap:8px; }
         .cart-item-controls button { background:#f1e5d8; border:none; border-radius:30px; width:30px; height:30px; font-weight:bold; cursor:pointer; }
         .cart-total { font-weight:800; font-size:1.3rem; text-align:right; border-top:2px dashed #e7cfb9; padding-top:1rem; }
-        .booking-form input, .booking-form textarea { width:100%; padding:12px 14px; margin:8px 0; border-radius:2rem; border:1px solid #e2cfbc; background:#fffbf5; }
-        .place-order-btn { background:#2c2418; color:white; border:none; padding:14px; width:100%; border-radius:40px; font-weight:bold; margin-top:20px; cursor:pointer; }
+        .booking-form input, .booking-form textarea { width:100%; padding:12px 14px; margin:8px 0; border-radius:2rem; border:1px solid #e2cfbc; background:#fffbf5; font-family:inherit; }
+        .place-order-btn { background:#2c2418; color:white; border:none; padding:14px; width:100%; border-radius:40px; font-weight:bold; margin-top:20px; cursor:pointer; font-size:1rem; }
         .place-order-btn:hover { background:#b45f2b; }
         .close-modal { float:right; background:none; border:none; font-size:28px; cursor:pointer; color:#a57448; }
-        .toast-msg { position:fixed; bottom:100px; right:30px; background:#2c2418e6; color:#ffefde; padding:10px 22px; border-radius:60px; z-index:1200; pointer-events:none; }
+        .toast-msg { position:fixed; bottom:100px; right:30px; background:#2c2418e6; color:#ffefde; padding:10px 22px; border-radius:60px; z-index:1200; pointer-events:none; transition:opacity 0.2s; }
     </style>
 </head>
 <body>
 
 <div class="navbar">
     <div class="nav-container">
-        <a href="index-kh.html" class="logo">
-            <img src="images/logo.png" alt="The Third Space Logo" onerror="this.onerror=null; this.outerHTML='<span style=\'font-size:1.3rem;font-weight:700;color:#5a3e2b;\'>☕ The Third Space</span>'">
-        </a>
+        <a href="index-kh.html" class="logo">☕ The Third Space</a>
         <button class="hamburger" id="hamburgerBtn">☰</button>
         <div class="nav-links" id="navLinks">
             <a href="index-kh.html" class="nav-link">ទំព័រដើម</a>
@@ -84,8 +82,8 @@
             <a href="drink-kh.html" class="nav-link">ភេសជ្ជៈ</a>
             <a href="contact-kh.html" class="nav-link">ទំនាក់ទំនង</a>
             <div class="flag-btns">
-                <a href="index.html"><img src="images/flag/english flag.png" alt="EN" class="flag"></a>
-                <a href="index-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag"></a>
+                <a href="index.html"><img src="images/flag/english flag.png" alt="EN" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23ffffff\'/%3E%3Crect width=\'30\' height=\'40\' fill=\'%2300227a\'/%3E%3Crect x=\'30\' width=\'30\' height=\'40\' fill=\'%23cf142b\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
+                <a href="index-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23003264\'/%3E%3Crect y=\'13.3\' width=\'60\' height=\'13.3\' fill=\'%23e8000e\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
             </div>
         </div>
     </div>
@@ -105,24 +103,24 @@
 
     <h2 class="section-title">🍰 នំខេករបស់យើង</h2>
     <div class="grid">
-        <div class="card"><img src="images/Cake/1.jpg" alt="croissant"><h3>នំក្រ័រសាំង</h3><div class="price">0.75$</div></div>
-        <div class="card"><img src="images/Cake/2.jpg" alt="cheesecake"><h3>នំឈីសខេក</h3><div class="price">1.50$</div></div>
-        <div class="card"><img src="images/Cake/3.jpg" alt="chocolate"><h3>នំសូកូឡាហ្វដច</h3><div class="price">3.30$</div></div>
-        <div class="card"><img src="images/Cake/4.jpg" alt="carrot"><h3>នំការ៉ុតវ៉ាល់ណាត់</h3><div class="price">2.75$</div></div>
-        <div class="card"><img src="images/Cake/5.jpg" alt="red velvet"><h3>នំរ៉េតវែលវ៉េត</h3><div class="price">3.93$</div></div>
-        <div class="card"><img src="images/Cake/6.jpg" alt="cupcake"><h3>នំខេកវ៉ានីឡា</h3><div class="price">2.50$</div></div>
-        <div class="card"><img src="images/Cake/7.jpg" alt="tiramisu"><h3>ទីរ៉ាមីស៊ូ</h3><div class="price">1.98$</div></div>
-        <div class="card"><img src="images/Cake/8.jpg" alt="brownie"><h3>ប្រោននីហ្វដច</h3><div class="price">2.33$</div></div>
+        <div class="card"><img src="images/Cake/1.jpg" alt="croissant" onerror="this.src='https://picsum.photos/id/106/280/200'; this.onerror=null;"><h3>នំក្រ័រសាំង</h3><div class="price">0.75$</div></div>
+        <div class="card"><img src="images/Cake/2.jpg" alt="cheesecake" onerror="this.src='https://picsum.photos/id/30/280/200'; this.onerror=null;"><h3>នំឈីសខេក</h3><div class="price">1.50$</div></div>
+        <div class="card"><img src="images/Cake/3.jpg" alt="chocolate" onerror="this.src='https://picsum.photos/id/122/280/200'; this.onerror=null;"><h3>នំសូកូឡាហ្វដច</h3><div class="price">3.30$</div></div>
+        <div class="card"><img src="images/Cake/4.jpg" alt="carrot" onerror="this.src='https://picsum.photos/id/112/280/200'; this.onerror=null;"><h3>នំការ៉ុតវ៉ាល់ណាត់</h3><div class="price">2.75$</div></div>
+        <div class="card"><img src="images/Cake/5.jpg" alt="red velvet" onerror="this.src='https://picsum.photos/id/106/280/200'; this.onerror=null;"><h3>នំរ៉េតវែលវ៉េត</h3><div class="price">3.93$</div></div>
+        <div class="card"><img src="images/Cake/6.jpg" alt="cupcake" onerror="this.src='https://picsum.photos/id/36/280/200'; this.onerror=null;"><h3>នំខេកវ៉ានីឡា</h3><div class="price">2.50$</div></div>
+        <div class="card"><img src="images/Cake/7.jpg" alt="tiramisu" onerror="this.src='https://picsum.photos/id/94/280/200'; this.onerror=null;"><h3>ទីរ៉ាមីស៊ូ</h3><div class="price">1.98$</div></div>
+        <div class="card"><img src="images/Cake/8.jpg" alt="brownie" onerror="this.src='https://picsum.photos/id/108/280/200'; this.onerror=null;"><h3>ប្រោននីហ្វដច</h3><div class="price">2.33$</div></div>
     </div>
 
     <h2 class="section-title">🥤 ភេសជ្ជៈពិសេស</h2>
     <div class="grid">
-        <div class="card"><img src="images/Drink/1.png" alt="macchiato"><h3>ការ៉ាមែល ម៉ាគីយ៉ាតូ</h3><div class="price">2.43$</div></div>
-        <div class="card"><img src="images/Drink/2.png" alt="latte"><h3>ឡាតេវ៉ានីឡា</h3><div class="price">2.93$</div></div>
-        <div class="card"><img src="images/Drink/4.png" alt="matcha"><h3>ម៉ាឆា ឡាតេ</h3><div class="price">3.50$</div></div>
-        <div class="card"><img src="images/Drink/3.png" alt="cold brew"><h3>ខូដប្រ៊ូ</h3><div class="price">1.45$</div></div>
-        <div class="card"><img src="images/Drink/5.png" alt="mocha"><h3>ម៉ុកកា</h3><div class="price">2.43$</div></div>
-        <div class="card"><img src="images/Drink/6.png" alt="affogato"><h3>អាហ្វូហ្គាតូ</h3><div class="price">3.00$</div></div>
+        <div class="card"><img src="images/Drink/1.png" alt="macchiato" onerror="this.src='https://picsum.photos/id/224/280/200'; this.onerror=null;"><h3>ការ៉ាមែល ម៉ាគីយ៉ាតូ</h3><div class="price">2.43$</div></div>
+        <div class="card"><img src="images/Drink/2.png" alt="latte" onerror="this.src='https://picsum.photos/id/225/280/200'; this.onerror=null;"><h3>ឡាតេវ៉ានីឡា</h3><div class="price">2.93$</div></div>
+        <div class="card"><img src="images/Drink/4.png" alt="matcha" onerror="this.src='https://picsum.photos/id/226/280/200'; this.onerror=null;"><h3>ម៉ាឆា ឡាតេ</h3><div class="price">3.50$</div></div>
+        <div class="card"><img src="images/Drink/3.png" alt="cold brew" onerror="this.src='https://picsum.photos/id/227/280/200'; this.onerror=null;"><h3>ខូដប្រ៊ូ</h3><div class="price">1.45$</div></div>
+        <div class="card"><img src="images/Drink/5.png" alt="mocha" onerror="this.src='https://picsum.photos/id/228/280/200'; this.onerror=null;"><h3>ម៉ុកកា</h3><div class="price">2.43$</div></div>
+        <div class="card"><img src="images/Drink/6.png" alt="affogato" onerror="this.src='https://picsum.photos/id/229/280/200'; this.onerror=null;"><h3>អាហ្វូហ្គាតូ</h3><div class="price">3.00$</div></div>
     </div>
 
     <div class="contact-card">
@@ -139,7 +137,6 @@
 <footer>© 2025 ទីធ្លាទីបី — កន្លែងកក់ក្តៅសម្រាប់កាហ្វេ និងនំខេក។ ☕✨</footer>
 
 <script>
-    // Hamburger toggle
     const hamburger = document.getElementById('hamburgerBtn');
     const navLinks = document.getElementById('navLinks');
     if (hamburger && navLinks) {
@@ -148,7 +145,7 @@
             link.addEventListener('click', () => navLinks.classList.remove('show'));
         });
     }
-    // Cart system (same as English, with Khmer messages)
+    // Cart system (Khmer messages)
     (function() {
         let cart = [];
         function parsePrice(priceStr) { let m = priceStr.match(/[\d\.]+/); return m ? parseFloat(m[0]) : 0; }
