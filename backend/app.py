@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -10,6 +11,15 @@ import psycopg2
 from contextlib import asynccontextmanager
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+# Cambodia timezone (UTC+7)
+CAMBODIA_TZ = timezone(timedelta(hours=7))
+
+def utc_to_cambodia(utc_dt: datetime) -> datetime:
+    """Convert UTC datetime to Cambodia timezone"""
+    if utc_dt.tzinfo is None:
+        utc_dt = utc_dt.replace(tzinfo=timezone.utc)
+    return utc_dt.astimezone(CAMBODIA_TZ)
 
 class OrderItem(BaseModel):
     name: str
@@ -73,7 +83,12 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://thethirdspace.vercel.app", "https://thethirdspace-3.onrender.com", "http://localhost:5500", "http://127.0.0.1:5500"],
+    allow_origins=[
+        "https://thethirdspace.vercel.app",
+        "https://thethirdspace-3.onrender.com",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -81,7 +96,6 @@ app.add_middleware(
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "static")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
 
 @app.post("/api/orders")
 async def create_order(order: OrderCreate):
@@ -122,7 +136,7 @@ async def get_order_history(phone: str):
         clean_phone_number = clean_phone(phone)
         if not clean_phone_number:
             return {"orders": []}
-            
+
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("""
@@ -132,36 +146,41 @@ async def get_order_history(phone: str):
             ORDER BY created_at DESC
         """, (clean_phone_number,))
         orders = cur.fetchall()
-        
+
         result = []
         for order in orders:
-            order_id, customer_name, phone_num, notes, total, created_at = order
-            
+            order_id, customer_name, phone_num, notes, total, created_at_utc = order
+            # Convert UTC to Cambodia time
+            if created_at_utc:
+                cambodia_time = utc_to_cambodia(created_at_utc)
+                created_at_str = cambodia_time.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                created_at_str = None
+
             cur.execute("""
                 SELECT product_name, price, quantity
                 FROM order_items
                 WHERE order_id = %s
             """, (order_id,))
-            items = [{"name": row[0], "price": float(row[1]), "quantity": row[2]} 
+            items = [{"name": row[0], "price": float(row[1]), "quantity": row[2]}
                      for row in cur.fetchall()]
-            
+
             result.append({
                 "order_id": order_id,
                 "customer_name": customer_name,
                 "phone": phone_num,
                 "notes": notes or "",
                 "total_amount": float(total),
-                "created_at": created_at.isoformat(),
+                "created_at": created_at_str,          
                 "items": items
             })
-        
+
         cur.close()
         conn.close()
         return {"orders": result}
     except Exception as e:
         print(f"History API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.get("/")
 async def root():
