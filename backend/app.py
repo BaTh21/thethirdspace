@@ -135,7 +135,7 @@ async def get_order_history(phone: str):
         cur.execute("""
             SELECT id, customer_name, phone, notes, total_amount, created_at
             FROM orders
-            WHERE phone = %s
+            WHERE regexp_replace(phone, '[^0-9]', '', 'g') = %s
             ORDER BY created_at DESC
         """, (clean_phone_number,))
         orders = cur.fetchall()
@@ -166,4 +166,5 @@ async def get_order_history(phone: str):
         conn.close()
         return {"orders": result}
     except Exception as e:
+        print(f"History API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
