@@ -1,14 +1,24 @@
 import os
 import re
 from datetime import datetime, timezone, timedelta
+import secrets
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, Header, HTTPException, status
 from pydantic import BaseModel
 from typing import List
 import psycopg2
 from contextlib import asynccontextmanager
+
+# ============================================
+# Admin Authentication
+# ============================================
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+# Simple token storage (in production use JWT or database)
+admin_tokens = {}  # token -> expiry
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -20,6 +30,23 @@ def utc_to_cambodia(utc_dt: datetime) -> datetime:
     if utc_dt.tzinfo is None:
         utc_dt = utc_dt.replace(tzinfo=timezone.utc)
     return utc_dt.astimezone(CAMBODIA_TZ)
+
+def generate_admin_token():
+    token = secrets.token_urlsafe(32)
+    expiry = datetime.now(CAMBODIA_TZ) + timedelta(hours=8)
+    admin_tokens[token] = expiry
+    return token
+
+def verify_admin_token(authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing authorization header")
+    scheme, _, token = authorization.partition(' ')
+    if scheme.lower() != 'bearer':
+        raise HTTPException(status_code=401, detail="Invalid auth scheme")
+    expiry = admin_tokens.get(token)
+    if not expiry or expiry < datetime.now(CAMBODIA_TZ):
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return token
 
 class OrderItem(BaseModel):
     name: str
@@ -180,6 +207,141 @@ async def get_order_history(phone: str):
         return {"orders": result}
     except Exception as e:
         print(f"History API error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# Admin login endpoint
+@app.post("/api/admin/login")
+async def admin_login(username: str, password: str):
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        token = generate_admin_token()
+        return {"token": token, "message": "Login successful"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+# Admin stats endpoint (protected)
+@app.get("/api/admin/stats")
+async def get_admin_stats(token: str = Depends(verify_admin_token)):
+    """Get aggregated order statistics (requires admin token)"""
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Define cake and drink keywords
+        cake_keywords = ['croissant', 'cheesecake', 'chocolate fudge', 'carrot walnut', 
+                         'red velvet', 'cupcake', 'tiramisu', 'brownie', 'នំ']
+        drink_keywords = ['macchiato', 'latte', 'matcha', 'cold brew', 'mocha', 'affogato',
+                          'ការ៉ាមែល', 'ឡាតេ', 'ម៉ាឆា', 'ខូដប្រ៊ូ', 'ម៉ូកា', 'អាហ្វូហ្គាតូ']
+        
+        # Helper to classify product
+        def classify_item(name_lower):
+            if any(kw in name_lower for kw in cake_keywords):
+                return 'cake'
+            elif any(kw in name_lower for kw in drink_keywords):
+                return 'drink'
+            return 'other'
+        
+        # Get all order items with their created_at dates
+        cur.execute("""
+            SELECT oi.product_name, oi.quantity, o.created_at
+            FROM order_items oi
+            JOIN orders o ON oi.order_id = o.id
+            ORDER BY o.created_at
+        """)
+        rows = cur.fetchall()
+        
+        # Prepare date ranges
+        now = datetime.now(CAMBODIA_TZ)
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = today_start - timedelta(days=today_start.weekday())  # Monday
+        month_start = today_start.replace(day=1)
+        year_start = today_start.replace(month=1, day=1)
+        
+        def in_range(date, start, end):
+            return start <= date < end
+        
+        stats = {
+            "day": {"cake": 0, "drink": 0, "total_orders": 0},
+            "week": {"cake": 0, "drink": 0, "total_orders": 0},
+            "month": {"cake": 0, "drink": 0, "total_orders": 0},
+            "year": {"cake": 0, "drink": 0, "total_orders": 0},
+            "all_time": {"cake": 0, "drink": 0, "total_orders": 0}
+        }
+        
+        # Track unique order IDs per period
+        order_ids_day = set()
+        order_ids_week = set()
+        order_ids_month = set()
+        order_ids_year = set()
+        order_ids_all = set()
+        
+        for product_name, quantity, created_at_utc in rows:
+            if created_at_utc is None:
+                continue
+            created_at = utc_to_cambodia(created_at_utc)
+            category = classify_item(product_name.lower())
+            order_id = None  # We don't have order_id directly in this SELECT, but we can add it
+            # Actually we need order_id to count unique orders. Let's modify the SELECT
+            # But for simplicity, we'll use a different query. Let's re-query with order_id.
+            # I'll rewrite this section more efficiently below.
+            pass
+        
+        # Better query with order_id
+        cur.execute("""
+            SELECT oi.order_id, oi.product_name, oi.quantity, o.created_at
+            FROM order_items oi
+            JOIN orders o ON oi.order_id = o.id
+            ORDER BY o.created_at
+        """)
+        rows = cur.fetchall()
+        
+        stats = {
+            "day": {"cake": 0, "drink": 0, "total_orders": 0},
+            "week": {"cake": 0, "drink": 0, "total_orders": 0},
+            "month": {"cake": 0, "drink": 0, "total_orders": 0},
+            "year": {"cake": 0, "drink": 0, "total_orders": 0},
+            "all_time": {"cake": 0, "drink": 0, "total_orders": 0}
+        }
+        orders_in_period = {
+            "day": set(),
+            "week": set(),
+            "month": set(),
+            "year": set(),
+            "all_time": set()
+        }
+        
+        for order_id, product_name, quantity, created_at_utc in rows:
+            created_at = utc_to_cambodia(created_at_utc)
+            category = classify_item(product_name.lower())
+            if category not in ('cake', 'drink'):
+                continue
+            # All time
+            stats["all_time"][category] += quantity
+            orders_in_period["all_time"].add(order_id)
+            # Day
+            if in_range(created_at, today_start, today_start + timedelta(days=1)):
+                stats["day"][category] += quantity
+                orders_in_period["day"].add(order_id)
+            # Week
+            if in_range(created_at, week_start, week_start + timedelta(days=7)):
+                stats["week"][category] += quantity
+                orders_in_period["week"].add(order_id)
+            # Month
+            if in_range(created_at, month_start, month_start + timedelta(days=32)):  # safe upper bound
+                stats["month"][category] += quantity
+                orders_in_period["month"].add(order_id)
+            # Year
+            if in_range(created_at, year_start, year_start + timedelta(days=366)):
+                stats["year"][category] += quantity
+                orders_in_period["year"].add(order_id)
+        
+        # Add total order counts
+        for period in stats:
+            stats[period]["total_orders"] = len(orders_in_period[period])
+        
+        cur.close()
+        conn.close()
+        return stats
+    except Exception as e:
+        print(f"Admin stats error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/")
