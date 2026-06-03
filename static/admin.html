@@ -20,14 +20,12 @@
             color: #2c2418;
         }
 
-        /* Login & Dashboard Containers */
         .login-container, .dashboard-container {
             max-width: 1400px;
             margin: 30px auto;
             padding: 20px;
         }
 
-        /* Login Card */
         .login-card {
             background: white;
             border-radius: 32px;
@@ -71,7 +69,6 @@
             background: #b45f2b;
         }
 
-        /* Dashboard Header */
         .header-bar {
             display: flex;
             justify-content: space-between;
@@ -84,6 +81,26 @@
         .header-bar h1 {
             font-size: 1.8rem;
             color: #5a3e2b;
+        }
+
+        .back-btn {
+            background: #7e5a3b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #5a3e2b;
+            transform: translateY(-2px);
         }
 
         .logout-btn {
@@ -102,7 +119,6 @@
             transform: translateY(-2px);
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -143,7 +159,6 @@
             color: #7e5a3b;
         }
 
-        /* Chart Containers */
         .chart-container {
             background: white;
             border-radius: 28px;
@@ -158,15 +173,15 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #e6cfad;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         canvas {
             max-height: 320px;
         }
 
-        /* ============================================ */
-        /* ENHANCED ORDERS TABLE STYLES                */
-        /* ============================================ */
         .orders-table-container {
             background: white;
             border-radius: 28px;
@@ -186,11 +201,6 @@
             gap: 10px;
         }
 
-        .orders-table-container h3 i {
-            color: #b45f2b;
-        }
-
-        /* Main Table */
         .orders-table {
             width: 100%;
             border-collapse: collapse;
@@ -214,7 +224,6 @@
             color: #3a2a1a;
         }
 
-        /* Zebra striping for better readability */
         .orders-table tbody tr:nth-child(even) {
             background-color: #fefaf5;
         }
@@ -224,7 +233,6 @@
             transition: 0.2s;
         }
 
-        /* Items column styling */
         .order-items {
             font-size: 0.85rem;
             line-height: 1.4;
@@ -241,7 +249,6 @@
             white-space: nowrap;
         }
 
-        /* Order ID badge */
         .order-id-badge {
             background: #e6cfad;
             color: #5a3e2b;
@@ -252,13 +259,11 @@
             display: inline-block;
         }
 
-        /* Total amount highlight */
         .order-total {
             font-weight: 700;
             color: #b45f2b;
         }
 
-        /* Notes column */
         .order-notes {
             font-size: 0.8rem;
             color: #7e5a3b;
@@ -266,7 +271,6 @@
             word-break: break-word;
         }
 
-        /* Empty state */
         .empty-orders {
             text-align: center;
             padding: 3rem;
@@ -274,7 +278,6 @@
             font-style: italic;
         }
 
-        /* Loading spinner */
         .loading {
             text-align: center;
             padding: 2rem;
@@ -286,7 +289,6 @@
             margin-top: 10px;
         }
 
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .dashboard-container {
                 padding: 15px;
@@ -302,6 +304,14 @@
             }
             .header-bar h1 {
                 font-size: 1.4rem;
+            }
+            .back-btn, .logout-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            .header-bar div {
+                flex-wrap: wrap;
+                justify-content: flex-end;
             }
         }
     </style>
@@ -322,15 +332,16 @@
     <div class="dashboard-container" id="dashboardView" style="display: none;">
         <div class="header-bar">
             <h1><i class="fas fa-chart-line"></i> Admin Dashboard</h1>
-            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <div style="display: flex; gap: 12px;">
+                <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Website</a>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
         </div>
 
-        <!-- Stats Cards -->
         <div class="stats-grid" id="summaryStats">
             <div class="loading">Loading stats...</div>
         </div>
 
-        <!-- Charts -->
         <div class="chart-container">
             <h3><i class="fas fa-chart-bar"></i> Period Comparison (Cakes vs Drinks)</h3>
             <canvas id="periodChart"></canvas>
@@ -341,7 +352,6 @@
             <canvas id="allTimeChart"></canvas>
         </div>
 
-        <!-- Enhanced Orders Table -->
         <div class="orders-table-container">
             <h3><i class="fas fa-list"></i> All Customer Orders</h3>
             <div id="ordersTable">
@@ -352,19 +362,15 @@
 </div>
 
 <script>
-    // ============================================
-    // Backend API Base URL (Render backend)
-    // ============================================
     const API_BASE = 'https://thethirdspace-3.onrender.com';
-
     let authToken = null;
+
     const loginView = document.getElementById('loginView');
     const dashboardView = document.getElementById('dashboardView');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const loginError = document.getElementById('loginError');
 
-    // Login
     loginBtn.onclick = async () => {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
@@ -385,7 +391,6 @@
         }
     };
 
-    // Logout
     logoutBtn.onclick = () => {
         authToken = null;
         localStorage.removeItem('admin_token');
@@ -393,7 +398,6 @@
         dashboardView.style.display = 'none';
     };
 
-    // Load dashboard data
     async function loadDashboard() {
         if (!authToken) {
             const saved = localStorage.getItem('admin_token');
@@ -409,7 +413,6 @@
             const ordersData = await ordersRes.json();
             const allOrders = ordersData.orders || [];
 
-            // Render stats cards
             document.getElementById('summaryStats').innerHTML = `
                 <div class="stat-card"><h3>Today's Orders</h3><div class="stat-number">${statsData.day.total_orders}</div><div>Cakes: ${statsData.day.cake} | Drinks: ${statsData.day.drink}</div></div>
                 <div class="stat-card"><h3>This Week</h3><div class="stat-number">${statsData.week.total_orders}</div><div>Cakes: ${statsData.week.cake} | Drinks: ${statsData.week.drink}</div></div>
@@ -418,13 +421,11 @@
                 <div class="stat-card"><h3>All Time</h3><div class="stat-number">${statsData.all_time.total_orders}</div><div>Cakes: ${statsData.all_time.cake} | Drinks: ${statsData.all_time.drink}</div></div>
             `;
 
-            // Destroy old charts to avoid duplication
             let oldPeriod = Chart.getChart('periodChart');
             if (oldPeriod) oldPeriod.destroy();
             let oldAll = Chart.getChart('allTimeChart');
             if (oldAll) oldAll.destroy();
 
-            // Period bar chart
             new Chart(document.getElementById('periodChart'), {
                 type: 'bar',
                 data: {
@@ -437,16 +438,11 @@
                 options: { responsive: true, maintainAspectRatio: true }
             });
 
-            // All time pie chart
             new Chart(document.getElementById('allTimeChart'), {
                 type: 'pie',
-                data: {
-                    labels: ['Cakes', 'Drinks'],
-                    datasets: [{ data: [statsData.all_time.cake, statsData.all_time.drink], backgroundColor: ['#d4a373', '#b45f2b'] }]
-                }
+                data: { labels: ['Cakes', 'Drinks'], datasets: [{ data: [statsData.all_time.cake, statsData.all_time.drink], backgroundColor: ['#d4a373', '#b45f2b'] }] }
             });
 
-            // Render orders table with enhanced styling
             renderOrdersTable(allOrders);
 
             loginView.style.display = 'none';
@@ -461,14 +457,12 @@
         }
     }
 
-    // Enhanced table rendering function
     function renderOrdersTable(orders) {
         const container = document.getElementById('ordersTable');
         if (!orders.length) {
             container.innerHTML = '<div class="empty-orders"><i class="fas fa-coffee"></i> No orders found yet.<br><small>Orders will appear here once customers place them.</small></div>';
             return;
         }
-
         let tableHtml = `
             <table class="orders-table">
                 <thead>
@@ -484,11 +478,8 @@
                 </thead>
                 <tbody>
         `;
-
         for (const order of orders) {
-            // Format items with nice badges
             const itemsHtml = order.items.map(item => `<span>${escapeHtml(item.name)} ×${item.quantity}</span>`).join('');
-
             tableHtml += `
                 <tr>
                     <td><span class="order-id-badge">#${order.order_id}</span></td>
@@ -501,7 +492,6 @@
                 </tr>
             `;
         }
-
         tableHtml += `</tbody></table>`;
         container.innerHTML = tableHtml;
     }
@@ -511,7 +501,6 @@
         return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
     }
 
-    // Auto-login if token exists
     (async () => {
         const saved = localStorage.getItem('admin_token');
         if (saved) {

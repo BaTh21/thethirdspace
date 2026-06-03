@@ -83,6 +83,26 @@
             color: #5a3e2b;
         }
 
+        .back-btn {
+            background: #7e5a3b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #5a3e2b;
+            transform: translateY(-2px);
+        }
+
         .logout-btn {
             background: #b45f2b;
             color: white;
@@ -285,12 +305,19 @@
             .header-bar h1 {
                 font-size: 1.4rem;
             }
+            .back-btn, .logout-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            .header-bar div {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <!-- ទំព័រចូលប្រើប្រាស់ (Login) -->
     <div class="login-container" id="loginView">
         <div class="login-card">
             <i class="fas fa-lock" style="font-size: 48px; color: #5a3e2b; margin-bottom: 15px;"></i>
@@ -302,31 +329,29 @@
         </div>
     </div>
 
-    <!-- ផ្ទាំងគ្រប់គ្រង (Dashboard) -->
     <div class="dashboard-container" id="dashboardView" style="display: none;">
         <div class="header-bar">
             <h1><i class="fas fa-chart-line"></i> ផ្ទាំងគ្រប់គ្រង</h1>
-            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> ចាកចេញ</button>
+            <div style="display: flex; gap: 12px;">
+                <a href="index-Kh.html" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ទៅកាន់គេហទំព័រ</a>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> ចាកចេញ</button>
+            </div>
         </div>
 
-        <!-- ស្ថិតិរហ័ស -->
         <div class="stats-grid" id="summaryStats">
             <div class="loading">កំពុងផ្ទុកទិន្នន័យ...</div>
         </div>
 
-        <!-- ក្រាហ្វប្រៀបធៀបតាមកាលកំណត់ -->
         <div class="chart-container">
             <h3><i class="fas fa-chart-bar"></i> ប្រៀបធៀបនំខេក និងភេសជ្ជៈ</h3>
             <canvas id="periodChart"></canvas>
         </div>
 
-        <!-- ក្រាហ្វសរុបគ្រប់ពេល -->
         <div class="chart-container">
             <h3><i class="fas fa-chart-pie"></i> សរុបការលក់គ្រប់ពេល</h3>
             <canvas id="allTimeChart"></canvas>
         </div>
 
-        <!-- តារាងបង្ហាញការបញ្ជាទិញទាំងអស់ -->
         <div class="orders-table-container">
             <h3><i class="fas fa-list"></i> បញ្ជីការបញ្ជាទិញពីអតិថិជន</h3>
             <div id="ordersTable">
@@ -337,19 +362,15 @@
 </div>
 
 <script>
-    // ============================================
-    // URL នៃ backend (Render)
-    // ============================================
     const API_BASE = 'https://thethirdspace-3.onrender.com';
-
     let authToken = null;
+
     const loginView = document.getElementById('loginView');
     const dashboardView = document.getElementById('dashboardView');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const loginError = document.getElementById('loginError');
 
-    // ចូលប្រើ
     loginBtn.onclick = async () => {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
@@ -370,7 +391,6 @@
         }
     };
 
-    // ចាកចេញ
     logoutBtn.onclick = () => {
         authToken = null;
         localStorage.removeItem('admin_token');
@@ -378,7 +398,6 @@
         dashboardView.style.display = 'none';
     };
 
-    // ផ្ទុកទិន្នន័យទៅកាន់ផ្ទាំងគ្រប់គ្រង
     async function loadDashboard() {
         if (!authToken) {
             const saved = localStorage.getItem('admin_token');
@@ -394,7 +413,6 @@
             const ordersData = await ordersRes.json();
             const allOrders = ordersData.orders || [];
 
-            // បង្ហាញស្ថិតិ
             document.getElementById('summaryStats').innerHTML = `
                 <div class="stat-card"><h3>ការបញ្ជាទិញថ្ងៃនេះ</h3><div class="stat-number">${statsData.day.total_orders}</div><div>នំខេក: ${statsData.day.cake} | ភេសជ្ជៈ: ${statsData.day.drink}</div></div>
                 <div class="stat-card"><h3>សប្តាហ៍នេះ</h3><div class="stat-number">${statsData.week.total_orders}</div><div>នំខេក: ${statsData.week.cake} | ភេសជ្ជៈ: ${statsData.week.drink}</div></div>
@@ -403,13 +421,11 @@
                 <div class="stat-card"><h3>គ្រប់ពេល</h3><div class="stat-number">${statsData.all_time.total_orders}</div><div>នំខេក: ${statsData.all_time.cake} | ភេសជ្ជៈ: ${statsData.all_time.drink}</div></div>
             `;
 
-            // បំផ្លាញក្រាហ្វចាស់ (បើមាន)
             let oldPeriod = Chart.getChart('periodChart');
             if (oldPeriod) oldPeriod.destroy();
             let oldAll = Chart.getChart('allTimeChart');
             if (oldAll) oldAll.destroy();
 
-            // ក្រាហ្វប្រៀបធៀប
             new Chart(document.getElementById('periodChart'), {
                 type: 'bar',
                 data: {
@@ -422,16 +438,11 @@
                 options: { responsive: true, maintainAspectRatio: true }
             });
 
-            // ក្រាហ្វចំណែកគ្រប់ពេល
             new Chart(document.getElementById('allTimeChart'), {
                 type: 'pie',
-                data: {
-                    labels: ['នំខេក', 'ភេសជ្ជៈ'],
-                    datasets: [{ data: [statsData.all_time.cake, statsData.all_time.drink], backgroundColor: ['#d4a373', '#b45f2b'] }]
-                }
+                data: { labels: ['នំខេក', 'ភេសជ្ជៈ'], datasets: [{ data: [statsData.all_time.cake, statsData.all_time.drink], backgroundColor: ['#d4a373', '#b45f2b'] }] }
             });
 
-            // បង្ហាញតារាងការបញ្ជាទិញ
             renderOrdersTable(allOrders);
 
             loginView.style.display = 'none';
@@ -446,14 +457,12 @@
         }
     }
 
-    // តារាងបង្ហាញការបញ្ជាទិញ
     function renderOrdersTable(orders) {
         const container = document.getElementById('ordersTable');
         if (!orders.length) {
             container.innerHTML = '<div class="empty-orders"><i class="fas fa-coffee"></i> មិនទាន់មានការបញ្ជាទិញនៅឡើយទេ។<br><small>ការបញ្ជាទិញនឹងបង្ហាញនៅទីនេះនៅពេលអតិថិជនដាក់បញ្ជា។</small></div>';
             return;
         }
-
         let tableHtml = `
             <table class="orders-table">
                 <thead>
@@ -469,7 +478,6 @@
                 </thead>
                 <tbody>
         `;
-
         for (const order of orders) {
             const itemsHtml = order.items.map(item => `<span>${escapeHtml(item.name)} ×${item.quantity}</span>`).join('');
             tableHtml += `
@@ -484,7 +492,6 @@
                 </tr>
             `;
         }
-
         tableHtml += `</tbody></table>`;
         container.innerHTML = tableHtml;
     }
@@ -494,7 +501,6 @@
         return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
     }
 
-    // ចូលដោយស្វ័យប្រវត្តិប្រសិនបើមាន token រួចហើយ
     (async () => {
         const saved = localStorage.getItem('admin_token');
         if (saved) {
