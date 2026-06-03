@@ -209,6 +209,48 @@ async def get_order_history(phone: str):
         print(f"History API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
+@app.get("/api/admin/orders")
+async def get_all_orders(token: str = Depends(verify_admin_token)):
+    """Get all orders with items (admin only)"""
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, customer_name, phone, notes, total_amount, created_at
+            FROM orders
+            ORDER BY created_at DESC
+        """)
+        orders = cur.fetchall()
+        
+        result = []
+        for order in orders:
+            order_id, customer_name, phone_num, notes, total, created_at_utc = order
+            created_at = utc_to_cambodia(created_at_utc).strftime("%Y-%m-%d %H:%M:%S")
+            
+            cur.execute("""
+                SELECT product_name, price, quantity
+                FROM order_items
+                WHERE order_id = %s
+            """, (order_id,))
+            items = [{"name": row[0], "price": float(row[1]), "quantity": row[2]} for row in cur.fetchall()]
+            
+            result.append({
+                "order_id": order_id,
+                "customer_name": customer_name,
+                "phone": phone_num,
+                "notes": notes or "",
+                "total_amount": float(total),
+                "created_at": created_at,
+                "items": items
+            })
+        
+        cur.close()
+        conn.close()
+        return {"orders": result}
+    except Exception as e:
+        print(f"Admin orders error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
 # Admin login endpoint
 @app.post("/api/admin/login")
 async def admin_login(username: str, password: str):
