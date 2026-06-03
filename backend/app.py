@@ -55,9 +55,17 @@ async def lifespan(app: FastAPI):
                 );
             """)
             conn.commit()
+            cur.execute("SELECT id, phone FROM orders")
+            all_orders = cur.fetchall()
+            for order_id, old_phone in all_orders:
+                cleaned = clean_phone(old_phone)
+                if cleaned != old_phone:
+                    cur.execute("UPDATE orders SET phone = %s WHERE id = %s", (cleaned, order_id))
+            conn.commit()
+            
             cur.close()
             conn.close()
-            print("✅ Database tables ready")
+            print("✅ Database tables ready and phone numbers cleaned")
         except Exception as e:
             print(f"⚠️ Table creation warning: {e}")
     yield
@@ -66,7 +74,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://thethirdspace.vercel.app", "https://thethirdspace-3.onrender.com","http://localhost:5500", "http://127.0.0.1:5500" ],
+    allow_origins=["https://thethirdspace.vercel.app", "https://thethirdspace-3.onrender.com", "http://localhost:5500", "http://127.0.0.1:5500"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -135,7 +143,7 @@ async def get_order_history(phone: str):
         cur.execute("""
             SELECT id, customer_name, phone, notes, total_amount, created_at
             FROM orders
-            WHERE regexp_replace(phone, '[^0-9]', '', 'g') = %s
+            WHERE phone = %s
             ORDER BY created_at DESC
         """, (clean_phone_number,))
         orders = cur.fetchall()
