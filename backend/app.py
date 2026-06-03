@@ -65,6 +65,10 @@ class OrderCreate(BaseModel):
     phone: str
     notes: str = ""
     items: List[OrderItem]
+    
+class AdminLogin(BaseModel):
+    username: str
+    password: str
 
 # ============================================
 # Database Initialization
@@ -188,9 +192,11 @@ async def get_order_history(phone: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Admin login
+
+
 @app.post("/api/admin/login")
-async def admin_login(username: str, password: str):
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+async def admin_login(login: AdminLogin):
+    if login.username == ADMIN_USERNAME and login.password == ADMIN_PASSWORD:
         token = generate_admin_token()
         return {"token": token, "message": "Login successful"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
