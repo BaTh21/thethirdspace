@@ -62,7 +62,6 @@ async def lifespan(app: FastAPI):
                 if cleaned != old_phone:
                     cur.execute("UPDATE orders SET phone = %s WHERE id = %s", (cleaned, order_id))
             conn.commit()
-            
             cur.close()
             conn.close()
             print("✅ Database tables ready and phone numbers cleaned")
@@ -83,20 +82,6 @@ app.add_middleware(
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "static")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-@app.get("/{full_path:path}")
-async def serve_static(full_path: str):
-    if full_path.startswith("api/"):
-        raise HTTPException(status_code=404)
-    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
-    file_path = os.path.join(static_dir, full_path)
-    if os.path.isfile(file_path):
-        return FileResponse(file_path)
-    return FileResponse(os.path.join(static_dir, "index.html"))
-
-@app.get("/")
-async def root():
-    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
-    return FileResponse(os.path.join(static_dir, "index.html"))
 
 @app.post("/api/orders")
 async def create_order(order: OrderCreate):
@@ -176,3 +161,19 @@ async def get_order_history(phone: str):
     except Exception as e:
         print(f"History API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/")
+async def root():
+    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
+    return FileResponse(os.path.join(static_dir, "index.html"))
+
+@app.get("/{full_path:path}")
+async def serve_static(full_path: str):
+    if full_path.startswith("api/"):
+        raise HTTPException(status_code=404)
+    static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
+    file_path = os.path.join(static_dir, full_path)
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+    return FileResponse(os.path.join(static_dir, "index.html"))
