@@ -366,7 +366,6 @@
             });
         })();
 
-        // Auto-fill phone if coming from order success
         const urlParams = new URLSearchParams(window.location.search);
         const phoneFromUrl = urlParams.get('phone');
         if (phoneFromUrl) {
@@ -398,7 +397,7 @@
                 const data = await response.json();
 
                 if (!data.orders || data.orders.length === 0) {
-                    container.innerHTML = '<div class="no-orders">📭 No orders found for this phone number.</div>';
+                    container.innerHTML = `<div class="no-orders">📭 No orders found for phone number: <strong>${escapeHtml(phone)}</strong><br><br><small>Make sure you enter the exact same phone number you used when placing your order.</small></div>`;
                     return;
                 }
 

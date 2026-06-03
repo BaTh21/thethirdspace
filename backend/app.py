@@ -1,4 +1,5 @@
 import os
+import re
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -23,6 +24,10 @@ class OrderCreate(BaseModel):
 
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
+
+def clean_phone(phone: str) -> str:
+    """Keep only digits from phone number"""
+    return re.sub(r'\D', '', phone)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -91,12 +96,13 @@ async def create_order(order: OrderCreate):
         total = sum(item.price * item.quantity for item in order.items)
         conn = get_db_connection()
         cur = conn.cursor()
+        clean_phone_number = clean_phone(order.phone)
         try:
             cur.execute("""
                 INSERT INTO orders (customer_name, phone, notes, total_amount)
                 VALUES (%s, %s, %s, %s)
                 RETURNING id
-            """, (order.customer_name, order.phone, order.notes, total))
+            """, (order.customer_name, clean_phone_number, order.notes, total))
             order_id = cur.fetchone()[0]
 
             for item in order.items:
@@ -118,8 +124,12 @@ async def create_order(order: OrderCreate):
 
 @app.get("/api/orders/history")
 async def get_order_history(phone: str):
-    """Get all orders for a customer by phone number"""
+    """Get all orders for a customer by phone number (digits only)"""
     try:
+        clean_phone_number = clean_phone(phone)
+        if not clean_phone_number:
+            return {"orders": []}
+            
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("""
@@ -127,14 +137,13 @@ async def get_order_history(phone: str):
             FROM orders
             WHERE phone = %s
             ORDER BY created_at DESC
-        """, (phone,))
+        """, (clean_phone_number,))
         orders = cur.fetchall()
         
         result = []
         for order in orders:
             order_id, customer_name, phone_num, notes, total, created_at = order
             
-            # Get items for this order
             cur.execute("""
                 SELECT product_name, price, quantity
                 FROM order_items

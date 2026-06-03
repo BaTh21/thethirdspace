@@ -503,23 +503,23 @@
                 <th style="text-align:center; padding:8px;">Qty</th>
                 <th style="text-align:right; padding:8px;">Price</th>
                 <th style="text-align:right; padding:8px;">Total</th>
-             </tr></thead>
+              </tr></thead>
             <tbody>`;
-                        cart.forEach(item => {
-                            const itemTotal = item.price * item.quantity;
-                            summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;">
+cart.forEach(item => {
+    const itemTotal = item.price * item.quantity;
+    summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;">
         <td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td>
         <td style="text-align:center; padding:8px;">${item.quantity}</td>
         <td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td>
         <td style="text-align:right; padding:8px;">$${itemTotal.toFixed(2)}</td>
-    </tr>`;
-                        });
-                        summaryHtml += `
+     </tr>`;
+});
+summaryHtml += `
             </tbody>
             <tfoot><tr style="border-top:2px solid #e6cfad;">
                 <td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td>
                 <td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td>
-            </tr></tfoot>
+             </tr></tfoot>
         </table>
     </div>
     <div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;">

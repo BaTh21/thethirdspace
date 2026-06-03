@@ -10,6 +10,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Same styles as history.html */
         * {
             margin: 0;
             padding: 0;
@@ -319,8 +320,9 @@
                 <a href="index-Kh.html" class="nav-link">ទំព័រដើម</a>
                 <a href="cake-kh.html" class="nav-link">នំខេក</a>
                 <a href="drink-kh.html" class="nav-link">ភេសជ្ជៈ</a>
-                <a href="history-kh.html" class="nav-link">ប្រវត្តិ</a>
+                <a href="history-kh.html" class="nav-link active">ប្រវត្តិ</a>
                 <a href="contact-kh.html" class="nav-link">ទំនាក់ទំនង</a>
+                
                 <div class="flag-btns">
                     <a href="history.html"><img src="images/flag/english flag.png" alt="EN" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23ffffff\'/%3E%3Crect width=\'30\' height=\'40\' fill=\'%2300227a\'/%3E%3Crect x=\'30\' width=\'30\' height=\'40\' fill=\'%23cf142b\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
                     <a href="history-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23003264\'/%3E%3Crect y=\'13.3\' width=\'60\' height=\'13.3\' fill=\'%23e8000e\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
@@ -396,7 +398,7 @@
                 const data = await response.json();
 
                 if (!data.orders || data.orders.length === 0) {
-                    container.innerHTML = '<div class="no-orders">📭 រកមិនឃើញប្រវត្តិការបញ្ជាសម្រាប់លេខទូរស័ព្ទនេះទេ។</div>';
+                    container.innerHTML = `<div class="no-orders">📭 រកមិនឃើញប្រវត្តិការបញ្ជាសម្រាប់លេខទូរស័ព្ទ: <strong>${escapeHtml(phone)}</strong><br><br><small>សូមប្រាកដថាអ្នកបញ្ចូលលេខទូរស័ព្ទដូចគ្នានឹងពេលបញ្ជា។</small></div>`;
                     return;
                 }
 
