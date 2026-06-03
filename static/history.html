@@ -293,6 +293,63 @@
             font-size: 0.9rem;
         }
 
+        /* Warning Modal Styles */
+        .warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warning-modal-content {
+            background: #fffef7;
+            max-width: 400px;
+            width: 90%;
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .warning-modal-content i {
+            font-size: 56px;
+            color: #e67e22;
+            margin-bottom: 1rem;
+        }
+
+        .warning-modal-content h3 {
+            color: #5a3e2b;
+            margin-bottom: 0.8rem;
+        }
+
+        .warning-modal-content p {
+            color: #7e5a3b;
+            margin-bottom: 1.5rem;
+        }
+
+        .warning-modal-content button {
+            background: #b45f2b;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .warning-modal-content button:hover {
+            background: #5a3e2b;
+        }
+
         @media (max-width: 640px) {
             .wrapper {
                 padding: 20px 16px;
@@ -343,6 +400,16 @@
         </div>
     </div>
 
+    <!-- Warning Modal -->
+    <div id="warningModal" class="warning-modal">
+        <div class="warning-modal-content">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>⚠️ Phone Number Required</h3>
+            <p>Please enter your phone number to view your order history.</p>
+            <button id="closeWarningBtn">OK</button>
+        </div>
+    </div>
+
     <footer>© BaTh-2026 The Third Space — Your cozy corner for coffee & cake. ☕✨</footer>
 
     <script>
@@ -366,6 +433,23 @@
             });
         })();
 
+        // Get warning modal elements
+        const warningModal = document.getElementById('warningModal');
+        const closeWarningBtn = document.getElementById('closeWarningBtn');
+
+        function showWarning() {
+            warningModal.style.display = 'flex';
+        }
+
+        function hideWarning() {
+            warningModal.style.display = 'none';
+        }
+
+        closeWarningBtn.onclick = hideWarning;
+        window.onclick = (e) => {
+            if (e.target === warningModal) hideWarning();
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
         const phoneFromUrl = urlParams.get('phone');
         if (phoneFromUrl) {
@@ -376,7 +460,7 @@
         document.getElementById('searchBtn').addEventListener('click', () => {
             const phone = document.getElementById('phoneInput').value.trim();
             if (!phone) {
-                alert('Please enter your phone number');
+                showWarning();
                 return;
             }
             searchOrders(phone);
@@ -397,14 +481,13 @@
                 const data = await response.json();
 
                 if (!data.orders || data.orders.length === 0) {
-                    container.innerHTML = `<div class="no-orders">📭 No orders found for phone number: <strong>${escapeHtml(phone)}</strong><br><br><small>Make sure you enter the exact same phone number you used when placing your order.</small></div>`;
+                    container.innerHTML = `<div class="no-orders">📭 No orders found for phone number: <strong>${escapeHtml(phone)}</strong><br><br><small>Make sure you enter the exact same phone number you used when placing your order (digits only, no spaces).</small></div>`;
                     return;
                 }
 
                 let html = '';
                 for (const order of data.orders) {
-                    const date = new Date(order.created_at);
-                    const formattedDate = date.toLocaleString();
+                    const formattedDate = order.created_at || 'Unknown date';
 
                     let itemsHtml = '';
                     order.items.forEach(item => {
@@ -423,7 +506,7 @@
                             <div class="order-header">
                                 <div>
                                     <span class="order-id">Order #${order.order_id}</span>
-                                    <div class="order-date"><i class="far fa-calendar-alt"></i> ${formattedDate}</div>
+                                    <div class="order-date"><i class="far fa-calendar-alt"></i> ${escapeHtml(formattedDate)}</div>
                                 </div>
                                 <div class="order-total">Total: $${order.total_amount.toFixed(2)}</div>
                             </div>
