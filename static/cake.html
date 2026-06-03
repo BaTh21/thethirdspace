@@ -417,6 +417,7 @@
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="cake.html" class="nav-link">Cake</a>
                 <a href="drink.html" class="nav-link">Drinks</a>
+                <a href="history.html" class="nav-link">History</a>
                 <a href="contact.html" class="nav-link">Contact</a>
                 <div class="flag-btns">
                     <a href="cake.html"><img src="images/flag/english flag.png" alt="EN" class="flag"
@@ -558,7 +559,48 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        let summaryHtml = `<div style="text-align:center; margin-bottom:15px;"><i class="fas fa-check-circle" style="font-size:48px; color:#2b6e3c;"></i><h3 style="color:#2b6e3c; margin-top:10px;">✅ Order Confirmed!</h3><p style="color:#666; margin-top:5px;">Order #${data.order_id || 'N/A'}</p></div><div style="max-height:300px; overflow-y:auto; margin-bottom:15px;"><table style="width:100%; border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #e6cfad;"><th style="text-align:left; padding:8px;">Item</th><th style="text-align:center; padding:8px;">Qty</th><th style="text-align:right; padding:8px;">Price</th><th style="text-align:right; padding:8px;">Total</th></tr></thead><tbody>`;
+                        let summaryHtml = `
+    <div style="text-align:center; margin-bottom:15px;">
+        <i class="fas fa-check-circle" style="font-size:48px; color:#2b6e3c;"></i>
+        <h3 style="color:#2b6e3c; margin-top:10px;">✅ Order Confirmed!</h3>
+        <p style="color:#666; margin-top:5px;">Order #${data.order_id || 'N/A'}</p>
+    </div>
+    <div style="max-height:300px; overflow-y:auto; margin-bottom:15px;">
+        <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="border-bottom:2px solid #e6cfad;">
+                <th style="text-align:left; padding:8px;">Item</th>
+                <th style="text-align:center; padding:8px;">Qty</th>
+                <th style="text-align:right; padding:8px;">Price</th>
+                <th style="text-align:right; padding:8px;">Total</th>
+             </tr></thead>
+            <tbody>`;
+                        cart.forEach(item => {
+                            const itemTotal = item.price * item.quantity;
+                            summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;">
+        <td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td>
+        <td style="text-align:center; padding:8px;">${item.quantity}</td>
+        <td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td>
+        <td style="text-align:right; padding:8px;">$${itemTotal.toFixed(2)}</td>
+    </tr>`;
+                        });
+                        summaryHtml += `
+            </tbody>
+            <tfoot><tr style="border-top:2px solid #e6cfad;">
+                <td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td>
+                <td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td>
+            </tr></tfoot>
+        </table>
+    </div>
+    <div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;">
+        <p><strong>👤 Customer:</strong> ${escapeHtml(formValues.name)}</p>
+        <p><strong>📞 Phone:</strong> ${escapeHtml(formValues.phone)}</p>
+        ${formValues.notes ? `<p><strong>📝 Notes:</strong> ${escapeHtml(formValues.notes)}</p>` : ''}
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+        <button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b; flex:1;">Continue Shopping</button>
+        <button id="viewHistoryBtn" class="place-order-btn" style="background:#5a3e2b; flex:1;"><i class="fas fa-history"></i> View Order History</button>
+    </div>
+`;
                         cart.forEach(item => { const itemTotal = item.price * item.quantity; summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;"><td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td><td style="text-align:center; padding:8px;">${item.quantity}</td><td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td><td style="text-align:right; padding:8px;">$${itemTotal.toFixed(2)}</td></tr>`; });
                         summaryHtml += `</tbody><tfoot><tr style="border-top:2px solid #e6cfad;"><td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td><td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td></tr></tfoot></table></div><div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;"><p><strong>👤 Customer:</strong> ${escapeHtml(formValues.name)}</p><p><strong>📞 Phone:</strong> ${escapeHtml(formValues.phone)}</p>${formValues.notes ? `<p><strong>📝 Notes:</strong> ${escapeHtml(formValues.notes)}</p>` : ''}</div><div style="text-align:center;"><button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b;">Continue Shopping</button></div>`;
                         const modalContent = document.querySelector('.cart-modal-content');
@@ -571,6 +613,10 @@
                             if (closeBtn) closeBtn.onclick = () => document.getElementById('cartModal').style.display = 'none';
                             const placeOrderBtn = document.getElementById('placeOrderBtn');
                             if (placeOrderBtn) placeOrderBtn.onclick = placeOrder;
+                        };
+
+                        document.getElementById('viewHistoryBtn').onclick = () => {
+                            window.location.href = `history.html?phone=${encodeURIComponent(formValues.phone)}`;
                         };
                         cart = [];
                         persistCart();

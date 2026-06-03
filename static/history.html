@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>The Third Space | Order History</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', 'Khmer OS', 'Noto Sans Khmer', system-ui, sans-serif;
+            background: #fef7e8;
+            color: #2c2418;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 244, 230, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #e6d5b8;
+            padding: 0.8rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #5a3e2b;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            color: #5a3e2b;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #5a3e2b;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background: #c7a66b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link.active {
+            background: #c7a66b;
+            color: white;
+            pointer-events: none;
+        }
+
+        .flag-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .flag {
+            width: 42px;
+            border-radius: 30px;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flag:hover {
+            transform: scale(1.08);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: rgba(255, 244, 230, 0.98);
+                padding: 1rem;
+                border-radius: 1.5rem;
+                margin-top: 0.75rem;
+                gap: 0.8rem;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+                white-space: normal;
+                padding: 0.7rem;
+            }
+
+            .flag-btns {
+                justify-content: center;
+                margin-top: 0.5rem;
+                width: 100%;
+            }
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            margin: 30px 0 40px;
+            color: #6b3e1a;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            width: 100px;
+            height: 4px;
+            background: #d4a373;
+            display: block;
+            margin: 12px auto 0;
+            border-radius: 4px;
+        }
+
+        .history-form {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .history-form input {
+            width: 100%;
+            max-width: 300px;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1px solid #e2cfbc;
+            font-size: 1rem;
+            margin-right: 10px;
+            margin-bottom: 15px;
+        }
+
+        .history-form button {
+            background: #5a3e2b;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .history-form button:hover {
+            background: #b45f2b;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e0ca;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid #e6cfad;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #b2703a;
+            font-size: 1.1rem;
+        }
+
+        .order-date {
+            color: #7e5a3b;
+            font-size: 0.9rem;
+        }
+
+        .order-total {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #b2703a;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+
+        .items-table th,
+        .items-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #f0e0ca;
+        }
+
+        .items-table th {
+            color: #5a3e2b;
+        }
+
+        .notes {
+            background: #f9eedf;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 3rem;
+            color: #7e5a3b;
+            background: white;
+            border-radius: 32px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 2px solid #e6cfad;
+            margin-top: 30px;
+            color: #7e5a3b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .wrapper {
+                padding: 20px 16px;
+            }
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .items-table th, .items-table td {
+                font-size: 0.85rem;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">☕ The Third Space</a>
+            <button class="hamburger" id="hamburgerBtn">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="cake.html" class="nav-link">Cake</a>
+                <a href="drink.html" class="nav-link">Drinks</a>
+                <a href="history.html" class="nav-link active">History</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                
+                <div class="flag-btns">
+                    <a href="history.html"><img src="images/flag/english flag.png" alt="EN" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23ffffff\'/%3E%3Crect width=\'30\' height=\'40\' fill=\'%2300227a\'/%3E%3Crect x=\'30\' width=\'30\' height=\'40\' fill=\'%23cf142b\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
+                    <a href="history-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23003264\'/%3E%3Crect y=\'13.3\' width=\'60\' height=\'13.3\' fill=\'%23e8000e\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <h1 class="page-title">📋 Order History</h1>
+
+        <div class="history-form">
+            <input type="tel" id="phoneInput" placeholder="Enter your phone number *" value="">
+            <button id="searchBtn"><i class="fas fa-search"></i> View My Orders</button>
+        </div>
+
+        <div id="ordersContainer" class="orders-list">
+            <div class="no-orders">Enter your phone number to see your order history.</div>
+        </div>
+    </div>
+
+    <footer>© BaTh-2026 The Third Space — Your cozy corner for coffee & cake. ☕✨</footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => navLinks.classList.toggle('show'));
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('show'));
+            });
+        }
+
+        (function setActiveNavLink() {
+            const currentFile = window.location.pathname.split('/').pop() || 'history.html';
+            const navLinksAll = document.querySelectorAll('.nav-link');
+            navLinksAll.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentFile) {
+                    link.classList.add('active');
+                }
+            });
+        })();
+
+        // Auto-fill phone if coming from order success
+        const urlParams = new URLSearchParams(window.location.search);
+        const phoneFromUrl = urlParams.get('phone');
+        if (phoneFromUrl) {
+            document.getElementById('phoneInput').value = phoneFromUrl;
+            searchOrders(phoneFromUrl);
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const phone = document.getElementById('phoneInput').value.trim();
+            if (!phone) {
+                alert('Please enter your phone number');
+                return;
+            }
+            searchOrders(phone);
+        });
+
+        document.getElementById('phoneInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+
+        async function searchOrders(phone) {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = '<div class="no-orders"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+            try {
+                const response = await fetch(`https://thethirdspace-3.onrender.com/api/orders/history?phone=${encodeURIComponent(phone)}`);
+                const data = await response.json();
+
+                if (!data.orders || data.orders.length === 0) {
+                    container.innerHTML = '<div class="no-orders">📭 No orders found for this phone number.</div>';
+                    return;
+                }
+
+                let html = '';
+                for (const order of data.orders) {
+                    const date = new Date(order.created_at);
+                    const formattedDate = date.toLocaleString();
+
+                    let itemsHtml = '';
+                    order.items.forEach(item => {
+                        itemsHtml += `
+                            <tr>
+                                <td>${escapeHtml(item.name)}</td>
+                                <td style="text-align:center">${item.quantity}</td>
+                                <td style="text-align:right">$${item.price.toFixed(2)}</td>
+                                <td style="text-align:right">$${(item.price * item.quantity).toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <span class="order-id">Order #${order.order_id}</span>
+                                    <div class="order-date"><i class="far fa-calendar-alt"></i> ${formattedDate}</div>
+                                </div>
+                                <div class="order-total">Total: $${order.total_amount.toFixed(2)}</div>
+                            </div>
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th style="text-align:center">Qty</th>
+                                        <th style="text-align:right">Price</th>
+                                        <th style="text-align:right">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${itemsHtml}
+                                </tbody>
+                            </table>
+                            ${order.notes ? `<div class="notes"><i class="fas fa-pen"></i> Notes: ${escapeHtml(order.notes)}</div>` : ''}
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                container.innerHTML = '<div class="no-orders">⚠️ Failed to load order history. Please try again later.</div>';
+            }
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+        }
+    </script>
+</body>
+
+</html>

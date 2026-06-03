@@ -115,3 +115,46 @@ async def create_order(order: OrderCreate):
             conn.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/orders/history")
+async def get_order_history(phone: str):
+    """Get all orders for a customer by phone number"""
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, customer_name, phone, notes, total_amount, created_at
+            FROM orders
+            WHERE phone = %s
+            ORDER BY created_at DESC
+        """, (phone,))
+        orders = cur.fetchall()
+        
+        result = []
+        for order in orders:
+            order_id, customer_name, phone_num, notes, total, created_at = order
+            
+            # Get items for this order
+            cur.execute("""
+                SELECT product_name, price, quantity
+                FROM order_items
+                WHERE order_id = %s
+            """, (order_id,))
+            items = [{"name": row[0], "price": float(row[1]), "quantity": row[2]} 
+                     for row in cur.fetchall()]
+            
+            result.append({
+                "order_id": order_id,
+                "customer_name": customer_name,
+                "phone": phone_num,
+                "notes": notes or "",
+                "total_amount": float(total),
+                "created_at": created_at.isoformat(),
+                "items": items
+            })
+        
+        cur.close()
+        conn.close()
+        return {"orders": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
