@@ -56,6 +56,14 @@
 </div>
 
 <script>
+    // ============================================
+    // IMPORTANT: Set your backend API base URL
+    // ============================================
+    // If your frontend is on Vercel, set this to your Render backend URL
+    const API_BASE = 'https://thethirdspace-3.onrender.com';
+    // For local testing, you can use: const API_BASE = '';
+    // If API_BASE is empty, it will use relative URLs (same origin)
+    
     let authToken = null;
     const loginView = document.getElementById('loginView');
     const dashboardView = document.getElementById('dashboardView');
@@ -68,7 +76,7 @@
         const password = document.getElementById('password').value;
         loginError.innerText = '';
         try {
-            const res = await fetch('/api/admin/login', {
+            const res = await fetch(`${API_BASE}/api/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -97,11 +105,11 @@
             else return;
         }
         try {
-            const statsRes = await fetch('/api/admin/stats', { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const statsRes = await fetch(`${API_BASE}/api/admin/stats`, { headers: { 'Authorization': `Bearer ${authToken}` } });
             if (statsRes.status === 401) throw new Error('Session expired');
             const statsData = await statsRes.json();
             
-            const ordersRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const ordersRes = await fetch(`${API_BASE}/api/admin/orders`, { headers: { 'Authorization': `Bearer ${authToken}` } });
             const ordersData = await ordersRes.json();
             const allOrders = ordersData.orders || [];
             
@@ -130,7 +138,7 @@
             });
             
             // Render orders table
-            let tableHtml = '<table><thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Date (Cambodia)</th><th>Notes</th></tr></thead><tbody>';
+            let tableHtml = '</table><thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Date (Cambodia)</th><th>Notes</th></tr></thead><tbody>';
             if (allOrders.length === 0) {
                 tableHtml += '<tr><td colspan="7">No orders yet.</td></tr>';
             } else {
