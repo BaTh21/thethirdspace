@@ -167,7 +167,7 @@ async def get_order_history(phone: str):
         cur = conn.cursor()
         cur.execute("""
             SELECT id, customer_name, phone, notes, total_amount, created_at
-            FROM orders WHERE phone = %s ORDER BY created_at DESC
+            FROM orders WHERE phone = %s ORDER BY created_at ASC
         """, (clean_phone_number,))
         orders = cur.fetchall()
         result = []
@@ -276,7 +276,7 @@ async def get_all_orders(token: str = Depends(verify_admin_token)):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT id, customer_name, phone, notes, total_amount, created_at FROM orders ORDER BY created_at DESC")
+        cur.execute("SELECT id, customer_name, phone, notes, total_amount, created_at FROM orders ORDER BY created_at ASC")
         orders = cur.fetchall()
         result = []
         for order in orders:
