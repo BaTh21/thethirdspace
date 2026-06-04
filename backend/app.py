@@ -76,6 +76,11 @@ class OrderCreate(BaseModel):
 class AdminLogin(BaseModel):
     username: str
     password: str
+    
+class ComplaintCreate(BaseModel):
+    name: str
+    contact: str   
+    message: str
 
 # ============================================
 # Database Initialization
@@ -103,6 +108,15 @@ async def lifespan(app: FastAPI):
                     product_name VARCHAR(200) NOT NULL,
                     price DECIMAL(10,2) NOT NULL,
                     quantity INTEGER NOT NULL
+                )
+            """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS complaints (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(100) NOT NULL,
+                    contact VARCHAR(100) NOT NULL,
+                    message TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
             conn.commit()
@@ -294,6 +308,36 @@ async def get_all_orders(token: str = Depends(verify_admin_token)):
     except Exception as e:
         print(f"Admin orders error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/complaints")
+async def submit_complaint(complaint: ComplaintCreate):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO complaints (name, contact, message) VALUES (%s, %s, %s)", 
+                (complaint.name, complaint.contact, complaint.message))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {"message": "Complaint received"}
+
+@app.get("/api/admin/complaints")
+async def get_all_complaints(token: str = Depends(verify_admin_token)):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, contact, message, created_at FROM complaints ORDER BY created_at DESC")
+    rows = cur.fetchall()
+    complaints = []
+    for row in rows:
+        complaints.append({
+            "id": row[0],
+            "name": row[1],
+            "contact": row[2],
+            "message": row[3],
+            "created_at": utc_to_cambodia(row[4]).strftime("%Y-%m-%d %H:%M:%S")
+        })
+    cur.close()
+    conn.close()
+    return {"complaints": complaints}
 
 # ============================================
 # SPA FALLBACK ROUTES

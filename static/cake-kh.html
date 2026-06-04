@@ -218,12 +218,140 @@
             margin-top: 8px;
         }
 
-        footer {
+        /* ===== ENHANCED FOOTER WITH MAP & COMPLAINT ===== */
+        .premium-footer {
+            background: #2c2418;
+            color: #f5ede1;
+            margin-top: 60px;
+            padding: 3rem 2rem 1.5rem;
+            border-top: 6px solid #d4a373;
+        }
+
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-col h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            color: #e7c9a5;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: #d4a373;
+            margin-top: 6px;
+            border-radius: 3px;
+        }
+
+        .address-text {
+            margin: 12px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .address-text i {
+            margin-top: 3px;
+            color: #d4a373;
+        }
+
+        .map-frame {
+            width: 100%;
+            height: 200px;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 15px 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .complaint-form input,
+        .complaint-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            margin: 8px 0 12px;
+            border-radius: 40px;
+            border: none;
+            background: #fff9ef;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #2c2418;
+        }
+
+        .complaint-form textarea {
+            border-radius: 24px;
+            resize: vertical;
+        }
+
+        .complaint-form button {
+            background: #d4a373;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #2c2418;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .complaint-form button:hover {
+            background: #b47c48;
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .complaint-message {
+            font-size: 0.8rem;
+            margin-top: 8px;
             text-align: center;
-            padding: 2rem;
-            border-top: 2px solid #e6cfad;
-            margin-top: 30px;
-            color: #7e5a3b;
+            color: #e7c9a5;
+        }
+
+        .social-links-footer {
+            display: flex;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .social-links-footer a {
+            color: #f5ede1;
+            font-size: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .social-links-footer a:hover {
+            color: #d4a373;
+            transform: translateY(-3px);
+        }
+
+        .copyright-bar {
+            text-align: center;
+            padding-top: 1.8rem;
+            border-top: 1px solid rgba(212, 163, 115, 0.3);
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            color: #bfaa8a;
         }
 
         @media (max-width:900px) {
@@ -474,7 +602,40 @@
         </div>
     </div>
 
-    <footer>© BaTh-2026 The Third Space — កន្លែងកក់ក្តៅសម្រាប់កាហ្វេ និងនំខេក។ ☕✨</footer>
+<!-- FOOTER WITH MAP AND COMPLAINT FORM (Khmer) -->
+  <footer class="premium-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3><i class="fas fa-map-marker-alt"></i> ទីតាំងរបស់យើង</h3>
+        <div class="address-text"><i class="fas fa-location-dot"></i><span>#42, ផ្លូវ 310, រាជធានីភ្នំពេញ, កម្ពុជា</span></div>
+        <div class="map-frame"><iframe src="https://maps.google.com/maps?q=11.5564,104.9282&z=16&output=embed" loading="lazy" title="The Third Space Location"></iframe></div>
+        <div class="address-text"><i class="fas fa-clock"></i><span>ច័ន្ទ - អាទិត្យ: ៧:០០ ព្រឹក – ៩:០០ យប់</span></div>
+      </div>
+
+      <div class="footer-col">
+        <h3><i class="fas fa-comment-dots"></i> មតិយោបល់ពីអតិថិជន</h3>
+        <form id="complaintForm" class="complaint-form">
+          <input type="text" id="compName" placeholder="ឈ្មោះរបស់អ្នក *" required>
+          <input type="text" id="compContact" placeholder="អ៊ីមែល ឬ លេខទូរស័ព្ទ *" required>
+          <textarea id="compMsg" rows="3" placeholder="ចែករំលែកបទពិសោធន៍ ឬបញ្ហារបស់អ្នក... (បណ្តឹង, យោបល់)" required></textarea>
+          <button type="submit"><i class="fas fa-paper-plane"></i> ផ្ញើមតិ</button>
+          <div id="complaintStatus" class="complaint-message"></div>
+        </form>
+        <div class="social-links-footer">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-telegram-plane"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3><i class="fas fa-hand-sparkles"></i> យើងស្តាប់អ្នក</h3>
+        <p>សំឡេងរបស់អ្នកសំខាន់ណាស់។ មិនថាជាការសរសើរ បណ្តឹង ឬគំនិតច្នៃប្រឌិតទេ — យើងខិតខំធ្វើឱ្យ The Third Space កាន់តែប្រសើរឡើងជារៀងរាល់ថ្ងៃ។</p>
+        <div style="background:#3e2c1d; border-radius:30px; padding:12px 16px; margin-top:15px;"><i class="fas fa-headset"></i> <strong>ការដោះស្រាយបណ្តឹង</strong><br><span style="font-size:0.85rem;">រាល់មតិត្រូវបានពិនិត្យក្នុងរយៈពេល ២៤ ម៉ោង។</span></div>
+      </div>
+    </div>
+    <div class="copyright-bar">© BaTh-2026 The Third Space — កន្លែងកក់ក្តៅសម្រាប់កាហ្វេ និងនំខេក។ ☕✨</div>
+  </footer>
 
     <script>
         // Same script as index.html - with Khmer empty cart message
@@ -496,7 +657,41 @@
                 }
             });
         })();
+            // ==================== NEW: COMPLAINT SUBMISSION (backend-ready) ====================
+    const complaintForm = document.getElementById('complaintForm');
+    const compName = document.getElementById('compName');
+    const compContact = document.getElementById('compContact');
+    const compMsg = document.getElementById('compMsg');
+    const complaintStatus = document.getElementById('complaintStatus');
+    const API_BASE = 'https://thethirdspace-3.onrender.com';
 
+    if (complaintForm) {
+      complaintForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = compName.value.trim();
+        const contact = compContact.value.trim();
+        const message = compMsg.value.trim();
+        if (!name || !contact || !message) {
+          complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please fill all fields.';
+          return;
+        }
+        try {
+          const res = await fetch(`${API_BASE}/api/complaints`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, contact, message })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            complaintStatus.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Thank you! Your feedback has been recorded.';
+            complaintForm.reset();
+            setTimeout(() => { complaintStatus.innerHTML = ''; }, 5000);
+          } else throw new Error(data.detail);
+        } catch (err) {
+          complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Server error. Please try again.';
+        }
+      });
+    }
         (function () {
             let cart = [];
             function parsePrice(priceStr) { let m = priceStr.match(/[\d\.]+/); return m ? parseFloat(m[0]) : 0; }
