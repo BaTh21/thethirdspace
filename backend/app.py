@@ -1,6 +1,5 @@
 import os
 import re
-import secrets
 from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +9,7 @@ from pydantic import BaseModel
 from typing import List
 import psycopg2
 from contextlib import asynccontextmanager
+import jwt
 
 # ============================================
 # Configuration
@@ -17,9 +17,10 @@ from contextlib import asynccontextmanager
 DATABASE_URL = os.environ.get("DATABASE_URL")
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+JWT_SECRET = os.environ.get("JWT_SECRET", "your-super-secret-key-change-this")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRY_HOURS = 8
 CAMBODIA_TZ = timezone(timedelta(hours=7))
-
-admin_tokens = {}  # token -> expiry (datetime)
 
 # ============================================
 # Helper Functions
@@ -35,11 +36,12 @@ def clean_phone(phone: str) -> str:
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
 
-def generate_admin_token():
-    token = secrets.token_urlsafe(32)
-    expiry = datetime.now(CAMBODIA_TZ) + timedelta(hours=8)
-    admin_tokens[token] = expiry
-    return token
+def create_admin_token() -> str:
+    payload = {
+        "sub": "admin",
+        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRY_HOURS)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def verify_admin_token(authorization: str = Header(None)):
     if not authorization:
@@ -47,10 +49,15 @@ def verify_admin_token(authorization: str = Header(None)):
     scheme, _, token = authorization.partition(' ')
     if scheme.lower() != 'bearer':
         raise HTTPException(status_code=401, detail="Invalid auth scheme")
-    expiry = admin_tokens.get(token)
-    if not expiry or expiry < datetime.now(CAMBODIA_TZ):
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return token
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("sub") != "admin":
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return token
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 # ============================================
 # Pydantic Models
@@ -65,7 +72,7 @@ class OrderCreate(BaseModel):
     phone: str
     notes: str = ""
     items: List[OrderItem]
-    
+
 class AdminLogin(BaseModel):
     username: str
     password: str
@@ -120,17 +127,17 @@ app = FastAPI(lifespan=lifespan)
 # ============================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, specify your domains
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-STATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "static")
+STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # ============================================
-# API ROUTES (must come before catch-all)
+# API ROUTES
 # ============================================
 
 @app.post("/api/orders")
@@ -191,23 +198,18 @@ async def get_order_history(phone: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Admin login
-
-
 @app.post("/api/admin/login")
 async def admin_login(login: AdminLogin):
     if login.username == ADMIN_USERNAME and login.password == ADMIN_PASSWORD:
-        token = generate_admin_token()
+        token = create_admin_token()
         return {"token": token, "message": "Login successful"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
-# Admin stats (protected)
 @app.get("/api/admin/stats")
 async def get_admin_stats(token: str = Depends(verify_admin_token)):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        # Classify items
         cake_keywords = ['croissant', 'cheesecake', 'chocolate fudge', 'carrot walnut', 
                          'red velvet', 'cupcake', 'tiramisu', 'brownie', 'នំ']
         drink_keywords = ['macchiato', 'latte', 'matcha', 'cold brew', 'mocha', 'affogato',
@@ -217,7 +219,6 @@ async def get_admin_stats(token: str = Depends(verify_admin_token)):
             if any(kw in n for kw in cake_keywords): return 'cake'
             if any(kw in n for kw in drink_keywords): return 'drink'
             return 'other'
-        # Fetch all order items with order creation time
         cur.execute("""
             SELECT oi.order_id, oi.product_name, oi.quantity, o.created_at
             FROM order_items oi
@@ -242,22 +243,17 @@ async def get_admin_stats(token: str = Depends(verify_admin_token)):
             cat = classify(product_name)
             if cat not in ('cake', 'drink'):
                 continue
-            # All time
             stats["all_time"][cat] += qty
             order_ids["all_time"].add(order_id)
-            # Day
             if today_start <= created < today_start + timedelta(days=1):
                 stats["day"][cat] += qty
                 order_ids["day"].add(order_id)
-            # Week
             if week_start <= created < week_start + timedelta(days=7):
                 stats["week"][cat] += qty
                 order_ids["week"].add(order_id)
-            # Month
             if month_start <= created < month_start + timedelta(days=32):
                 stats["month"][cat] += qty
                 order_ids["month"].add(order_id)
-            # Year
             if year_start <= created < year_start + timedelta(days=366):
                 stats["year"][cat] += qty
                 order_ids["year"].add(order_id)
@@ -270,7 +266,6 @@ async def get_admin_stats(token: str = Depends(verify_admin_token)):
         print(f"Stats error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Admin all orders (protected)
 @app.get("/api/admin/orders")
 async def get_all_orders(token: str = Depends(verify_admin_token)):
     try:
@@ -301,11 +296,14 @@ async def get_all_orders(token: str = Depends(verify_admin_token)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # ============================================
-# SPA FALLBACK ROUTES (must be last)
+# SPA FALLBACK ROUTES
 # ============================================
 @app.get("/")
 async def root():
-    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+    index_path = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return FileResponse(os.path.join(STATIC_DIR, "admin.html"))
 
 @app.get("/{full_path:path}")
 async def serve_static(full_path: str):
@@ -314,4 +312,4 @@ async def serve_static(full_path: str):
     file_path = os.path.join(STATIC_DIR, full_path)
     if os.path.isfile(file_path):
         return FileResponse(file_path)
-    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+    return FileResponse(os.path.join(STATIC_DIR, "admin.html"))
