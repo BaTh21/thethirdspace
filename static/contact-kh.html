@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>The Third Space | ទំនាក់ទំនង</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Same CSS as contact.html - copy exactly */
+        /* ========== STYLES (identical to English contact page, translated labels) ========== */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Poppins', 'Khmer OS', 'Noto Sans Khmer', system-ui, sans-serif;
+            font-family: 'Inter', 'Poppins', 'Khmer OS', 'Noto Sans Khmer', system-ui, sans-serif;
             background: #fef7e8;
             color: #2c2418;
         }
@@ -68,7 +68,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
             transition: all 0.3s ease;
             margin: 0 auto;
         }
@@ -77,10 +77,11 @@
             text-decoration: none;
             color: #5a3e2b;
             font-weight: 600;
-            font-size: 1.2rem;
-            padding: 0.5rem 1.2rem;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
             border-radius: 40px;
             transition: all 0.25s ease;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -99,6 +100,7 @@
         .flag-btns {
             display: flex;
             gap: 12px;
+            margin-left: 0.5rem;
         }
 
         .flag {
@@ -112,7 +114,7 @@
             transform: scale(1.08);
         }
 
-        @media (max-width:768px) {
+        @media (max-width: 768px) {
             .hamburger {
                 display: block;
             }
@@ -122,11 +124,11 @@
                 flex-direction: column;
                 width: 100%;
                 background: rgba(255, 244, 230, 0.98);
-                padding: 1rem 0;
-                border-radius: 1rem;
-                margin-top: 0.5rem;
-                margin-left: 0;
-                margin-right: 0;
+                padding: 1rem;
+                border-radius: 1.5rem;
+                margin-top: 0.75rem;
+                gap: 0.8rem;
+                backdrop-filter: blur(4px);
             }
 
             .nav-links.show {
@@ -137,9 +139,17 @@
                 flex-wrap: wrap;
             }
 
-            .nav-links .flag-btns {
+            .nav-link {
+                width: 100%;
+                text-align: center;
+                white-space: normal;
+                padding: 0.7rem;
+            }
+
+            .flag-btns {
                 justify-content: center;
                 margin-top: 0.5rem;
+                width: 100%;
             }
         }
 
@@ -149,56 +159,206 @@
             padding: 30px 40px;
         }
 
-        .contact-card {
-            background: #e8d9c4;
-            border-radius: 48px;
-            padding: 2.5rem;
-            margin: 50px 0 30px;
+        /* Contact Hero Section */
+        .contact-hero {
             text-align: center;
-            transition: all 0.3s;
+            margin: 20px 0 50px;
+        }
+
+        .contact-hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-family: 'Playfair Display', serif;
+            color: #5a3e2b;
+            margin-bottom: 15px;
+        }
+
+        .contact-hero p {
+            font-size: 1.1rem;
+            color: #7e5a3b;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Contact Grid - Cards */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e0ca;
         }
 
         .contact-card:hover {
-            background: #e2cfb0;
-            transform: scale(0.99);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+            border-color: #d4a373;
         }
 
-        .contact-card h2 {
-            font-size: 2rem;
+        .contact-card .icon {
+            font-size: 3rem;
+            color: #b45f2b;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+            color: #4d2f15;
+        }
+
+        .contact-card p {
+            font-size: 1rem;
+            color: #5a3e2b;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .contact-card .contact-detail {
+            font-weight: 600;
+            color: #b45f2b;
+            margin-top: 8px;
+            display: inline-block;
+            background: #f9eedf;
+            padding: 5px 15px;
+            border-radius: 40px;
+        }
+
+        /* Map & Hours Section */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0 60px;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f0e0ca;
+            height: 100%;
+            min-height: 320px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+            border: 0;
+        }
+
+        .hours-card {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f0e0ca;
+        }
+
+        .hours-card h3 {
+            font-size: 1.6rem;
+            font-family: 'Playfair Display', serif;
+            color: #4d2f15;
             margin-bottom: 1.2rem;
-            color: #553a1f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .contact-info p {
-            font-size: 1.2rem;
-            margin: 12px 0;
+        .hours-card h3 i {
+            color: #b45f2b;
+        }
+
+        .hours-list {
+            list-style: none;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0e0ca;
+            font-size: 1rem;
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .day {
+            font-weight: 600;
+            color: #5a3e2b;
+        }
+
+        .time {
+            color: #b45f2b;
             font-weight: 500;
         }
 
-        .contact-info span {
-            background: white;
-            padding: 0.3rem 1.2rem;
-            border-radius: 50px;
-            display: inline-block;
-        }
-
-        .badge {
-            background: white;
-            padding: 0.6rem 1.8rem;
-            border-radius: 60px;
-            font-weight: 600;
+        .special-note {
             margin-top: 20px;
-            display: inline-block;
-            transition: 0.2s;
+            font-size: 0.85rem;
+            color: #7e5a3b;
+            text-align: center;
+            background: #fef4e8;
+            padding: 10px;
+            border-radius: 30px;
         }
 
-        .badge:hover {
-            background: #aa7c4a;
+        /* Social Media Row */
+        .social-row {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+
+        .social-row h3 {
+            font-size: 1.4rem;
+            font-family: 'Playfair Display', serif;
+            color: #5a3e2b;
+            margin-bottom: 20px;
+        }
+
+        .social-icons-large {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .social-icons-large a {
+            background: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #5a3e2b;
+            transition: all 0.3s;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e6cfad;
+        }
+
+        .social-icons-large a:hover {
+            background: #b45f2b;
             color: white;
-            cursor: pointer;
+            transform: translateY(-5px);
+            border-color: #b45f2b;
         }
 
-        /* ===== ENHANCED FOOTER WITH MAP & COMPLAINT ===== */
+        /* Footer styles (same as before) */
         .premium-footer {
             background: #2c2418;
             color: #f5ede1;
@@ -334,41 +494,50 @@
             color: #bfaa8a;
         }
 
-        @media (max-width:900px) {
-            .wrapper {
-                padding: 20px;
-            }
+        /* Cart styles (unchanged) */
+        .add-cart-btn {
+            background: #5a3e2b;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fef3e4;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0 12px;
+            transition: 0.2s;
+        }
 
-            .contact-card h2 {
-                font-size: 1.8rem;
-            }
-
-            .contact-info p {
-                font-size: 1rem;
-            }
+        .add-cart-btn:hover {
+            background: #b45f2b;
+            transform: scale(0.96);
         }
 
         .cart-float {
             position: fixed;
-            bottom: 28px;
-            right: 28px;
+            bottom: 25px;
+            right: 25px;
             background: #d97a2b;
-            width: 58px;
-            height: 58px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 26px;
+            font-size: 24px;
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
             cursor: pointer;
             z-index: 200;
             background: linear-gradient(145deg, #c46a2c, #ac5a22);
+            transition: 0.2s;
         }
 
         .cart-float:hover {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         .cart-count {
@@ -404,10 +573,10 @@
         .cart-modal-content {
             background: #fffef7;
             max-width: 550px;
-            width: 90%;
-            max-height: 85vh;
+            width: 92%;
+            max-height: 88vh;
             border-radius: 2rem;
-            padding: 1.5rem 1.8rem;
+            padding: 1.2rem;
             overflow-y: auto;
         }
 
@@ -439,7 +608,7 @@
 
         .cart-total {
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             text-align: right;
             border-top: 2px dashed #e7cfb9;
             padding-top: 1rem;
@@ -482,30 +651,25 @@
             color: #a57448;
         }
 
-        .add-cart-btn {
-            background: #5a3e2b;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #fef3e4;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 6px 0 12px;
-        }
+        @media (max-width: 900px) {
+            .info-section {
+                grid-template-columns: 1fr;
+            }
 
-        .add-cart-btn:hover {
-            background: #b45f2b;
-            transform: scale(0.96);
+            .wrapper {
+                padding: 20px;
+            }
+
+            .contact-card p {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- Navbar (Khmer) -->
     <div class="navbar">
         <div class="nav-container">
             <a href="index-Kh.html" class="logo">☕ The Third Space</a>
@@ -518,61 +682,117 @@
                 <a href="contact-kh.html" class="nav-link">ទំនាក់ទំនង</a>
                 <a href="admin-kh.html" class="nav-link">អ្នកគ្រប់គ្រង</a>
                 <div class="flag-btns">
-                    <a href="contact.html"><img src="images/flag/english flag.png" alt="EN" class="flag"></a>
-                    <a href="contact-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag"></a>
+                    <a href="contact.html"><img src="images/flag/english flag.png" alt="EN" class="flag"
+                            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23ffffff\'/%3E%3Crect width=\'30\' height=\'40\' fill=\'%2300227a\'/%3E%3Crect x=\'30\' width=\'30\' height=\'40\' fill=\'%23cf142b\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
+                    <a href="contact-kh.html"><img src="images/flag/khmer flag.png" alt="KH" class="flag"
+                            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 40\'%3E%3Crect width=\'60\' height=\'40\' fill=\'%23003264\'/%3E%3Crect y=\'13.3\' width=\'60\' height=\'13.3\' fill=\'%23e8000e\'/%3E%3C/svg%3E'; this.onerror=null;"></a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main Content (Khmer) -->
     <div class="wrapper">
-        <div class="contact-card">
-            <h2>📞 ទំនាក់ទំនងមកកាន់យើង</h2>
-            <div class="contact-info">
-                <p>📱 តេឡេក្រាម: <span>TheThirdSpace_369</span></p>
-                <p>📘 ហ្វេសប៊ុក: <span>The Third Space</span></p>
-                <p>📸 អ៊ីនស្តាក្រាម: <span>The Third Space</span></p>
-                <div class="badge">✉️ បើមានបញ្ហាអ្វី សូមទាក់ទងមកយើងខ្ញុំ ២៤/៧</div>
+        <div class="contact-hero">
+            <h1>ទំនាក់ទំនងមកយើង</h1>
+            <p>យើងខ្ញុំរីករាយនឹងទទួលបានមតិយោបល់ពីអ្នក។ មិនថាអ្នកមានសំណួរអំពីកាហ្វេរបស់យើង ចង់កក់ព្រឹត្តិការណ៍ ឬគ្រាន់តែចង់ជំរាបសួរ — សូមទាក់ទងមកយើងគ្រប់ពេលវេលា។</p>
+        </div>
+
+        <!-- Contact Cards Grid -->
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                <h3>ទូរស័ព្ទមកយើង</h3>
+                <p>និយាយផ្ទាល់ជាមួយក្រុមការងាររបស់យើង</p>
+                <div class="contact-detail">+855 (0) 12 345 678</div>
+                <div class="contact-detail">+855 (0) 98 765 432</div>
+            </div>
+            <div class="contact-card">
+                <div class="icon"><i class="fas fa-envelope"></i></div>
+                <h3>អ៊ីមែលមកយើង</h3>
+                <p>សម្រាប់ការសាកសួរទូទៅ និងការកក់ទុក</p>
+                <div class="contact-detail">hello@thethirdspace.com</div>
+                <div class="contact-detail">events@thethirdspace.com</div>
+            </div>
+            <div class="contact-card">
+                <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h3>មកកាន់ទីតាំងរបស់យើង</h3>
+                <p>#42, ផ្លូវ 310, សង្កាត់បឹងកេងកងទី1,<br>រាជធានីភ្នំពេញ, កម្ពុជា</p>
+                <div class="contact-detail"><i class="fas fa-parking"></i> ចំណតរថយន្តឥតគិតថ្លៃ</div>
+            </div>
+        </div>
+
+        <!-- Map & Opening Hours Section -->
+        <div class="info-section">
+            <div class="map-container">
+                <iframe src="https://maps.google.com/maps?q=11.5564,104.9282&z=16&output=embed" 
+                    loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+                    title="The Third Space Location"></iframe>
+            </div>
+            <div class="hours-card">
+                <h3><i class="fas fa-clock"></i> ម៉ោងបើកបម្រើ</h3>
+                <ul class="hours-list">
+                    <li><span class="day">ច័ន្ទ – សុក្រ</span><span class="time">៧:០០ ព្រឹក – ៩:០០ យប់</span></li>
+                    <li><span class="day">សៅរ៍</span><span class="time">៨:០០ ព្រឹក – ១០:០០ យប់</span></li>
+                    <li><span class="day">អាទិត្យ</span><span class="time">៨:០០ ព្រឹក – ៨:០០ យប់</span></li>
+                    <li><span class="day">ថ្ងៃបុណ្យជាតិ</span><span class="time">៩:០០ ព្រឹក – ៦:០០ យប់</span></li>
+                </ul>
+                <div class="special-note">
+                    <i class="fas fa-mug-hot"></i> បញ្ជាទិញចុងក្រោយ ៣០ នាទីមុនបិទ
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media Links (Large Icons) -->
+        <div class="social-row">
+            <h3>តាមដានដំណើររបស់យើង</h3>
+            <div class="social-icons-large">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </div>
 
-  <!-- FOOTER WITH MAP AND COMPLAINT FORM (Khmer) -->
-  <footer class="premium-footer">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h3><i class="fas fa-map-marker-alt"></i> ទីតាំងរបស់យើង</h3>
-        <div class="address-text"><i class="fas fa-location-dot"></i><span>#42, ផ្លូវ 310, រាជធានីភ្នំពេញ, កម្ពុជា</span></div>
-        <div class="map-frame"><iframe src="https://maps.google.com/maps?q=11.5564,104.9282&z=16&output=embed" loading="lazy" title="The Third Space Location"></iframe></div>
-        <div class="address-text"><i class="fas fa-clock"></i><span>ច័ន្ទ - អាទិត្យ: ៧:០០ ព្រឹក – ៩:០០ យប់</span></div>
-      </div>
+    <!-- Footer with Map and Complaint Form (Khmer) -->
+    <footer class="premium-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3><i class="fas fa-map-marker-alt"></i> ទីតាំងរបស់យើង</h3>
+                <div class="address-text"><i class="fas fa-location-dot"></i><span>#42, ផ្លូវ 310, រាជធានីភ្នំពេញ, កម្ពុជា</span></div>
+                <div class="map-frame"><iframe src="https://maps.google.com/maps?q=11.5564,104.9282&z=16&output=embed" loading="lazy"></iframe></div>
+                <div class="address-text"><i class="fas fa-clock"></i><span>ច័ន្ទ - អាទិត្យ: ៧:០០ ព្រឹក – ៩:០០ យប់</span></div>
+            </div>
 
-      <div class="footer-col">
-        <h3><i class="fas fa-comment-dots"></i> មតិយោបល់ពីអតិថិជន</h3>
-        <form id="complaintForm" class="complaint-form">
-          <input type="text" id="compName" placeholder="ឈ្មោះរបស់អ្នក *" required>
-          <input type="text" id="compContact" placeholder="អ៊ីមែល ឬ លេខទូរស័ព្ទ *" required>
-          <textarea id="compMsg" rows="3" placeholder="ចែករំលែកបទពិសោធន៍ ឬបញ្ហារបស់អ្នក... (បណ្តឹង, យោបល់)" required></textarea>
-          <button type="submit"><i class="fas fa-paper-plane"></i> ផ្ញើមតិ</button>
-          <div id="complaintStatus" class="complaint-message"></div>
-        </form>
-        <div class="social-links-footer">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-telegram-plane"></i></a>
+            <div class="footer-col">
+                <h3><i class="fas fa-comment-dots"></i> មតិយោបល់ពីអតិថិជន</h3>
+                <form id="complaintForm" class="complaint-form">
+                    <input type="text" id="compName" placeholder="ឈ្មោះរបស់អ្នក *" required>
+                    <input type="text" id="compContact" placeholder="អ៊ីមែល ឬ លេខទូរស័ព្ទ *" required>
+                    <textarea id="compMsg" rows="3" placeholder="ចែករំលែកបទពិសោធន៍ ឬបញ្ហារបស់អ្នក... (បណ្តឹង, យោបល់)" required></textarea>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> ផ្ញើមតិ</button>
+                    <div id="complaintStatus" class="complaint-message"></div>
+                </form>
+                <div class="social-links-footer">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3><i class="fas fa-hand-sparkles"></i> យើងស្តាប់អ្នក</h3>
+                <p>សំឡេងរបស់អ្នកសំខាន់ណាស់។ មិនថាជាការសរសើរ បណ្តឹង ឬគំនិតច្នៃប្រឌិតទេ — យើងខិតខំធ្វើឱ្យ The Third Space កាន់តែប្រសើរឡើងជារៀងរាល់ថ្ងៃ។</p>
+                <div style="background:#3e2c1d; border-radius:30px; padding:12px 16px; margin-top:15px;"><i class="fas fa-headset"></i> <strong>ការដោះស្រាយបណ្តឹង</strong><br><span style="font-size:0.85rem;">រាល់មតិត្រូវបានពិនិត្យក្នុងរយៈពេល ២៤ ម៉ោង។</span></div>
+            </div>
         </div>
-      </div>
+        <div class="copyright-bar">© BaTh-2026 The Third Space — កន្លែងកក់ក្តៅសម្រាប់កាហ្វេ និងនំខេក។ ☕✨</div>
+    </footer>
 
-      <div class="footer-col">
-        <h3><i class="fas fa-hand-sparkles"></i> យើងស្តាប់អ្នក</h3>
-        <p>សំឡេងរបស់អ្នកសំខាន់ណាស់។ មិនថាជាការសរសើរ បណ្តឹង ឬគំនិតច្នៃប្រឌិតទេ — យើងខិតខំធ្វើឱ្យ The Third Space កាន់តែប្រសើរឡើងជារៀងរាល់ថ្ងៃ។</p>
-        <div style="background:#3e2c1d; border-radius:30px; padding:12px 16px; margin-top:15px;"><i class="fas fa-headset"></i> <strong>ការដោះស្រាយបណ្តឹង</strong><br><span style="font-size:0.85rem;">រាល់មតិត្រូវបានពិនិត្យក្នុងរយៈពេល ២៤ ម៉ោង។</span></div>
-      </div>
-    </div>
-    <div class="copyright-bar">© BaTh-2026 The Third Space — កន្លែងកក់ក្តៅសម្រាប់កាហ្វេ និងនំខេក។ ☕✨</div>
-  </footer>
-
+    <!-- Combined Script (Nav, Active Link, Complaint Submission, Cart System) -->
     <script>
+        // Hamburger & Active Nav
         const hamburger = document.getElementById('hamburgerBtn');
         const navLinks = document.getElementById('navLinks');
         if (hamburger && navLinks) {
@@ -581,51 +801,55 @@
                 link.addEventListener('click', () => navLinks.classList.remove('show'));
             });
         }
+
         (function setActiveNavLink() {
-            const currentFile = window.location.pathname.split('/').pop() || 'index.html';
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
+            const currentFile = window.location.pathname.split('/').pop() || 'contact-kh.html';
+            const navLinksAll = document.querySelectorAll('.nav-link');
+            navLinksAll.forEach(link => {
                 const href = link.getAttribute('href');
                 if (href === currentFile) {
                     link.classList.add('active');
                 }
             });
         })();
-        // ==================== NEW: COMPLAINT SUBMISSION (backend-ready) ====================
-    const complaintForm = document.getElementById('complaintForm');
-    const compName = document.getElementById('compName');
-    const compContact = document.getElementById('compContact');
-    const compMsg = document.getElementById('compMsg');
-    const complaintStatus = document.getElementById('complaintStatus');
-    const API_BASE = 'https://thethirdspace-3.onrender.com';
 
-    if (complaintForm) {
-      complaintForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = compName.value.trim();
-        const contact = compContact.value.trim();
-        const message = compMsg.value.trim();
-        if (!name || !contact || !message) {
-          complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please fill all fields.';
-          return;
+        // Complaint Submission (backend-ready)
+        const complaintForm = document.getElementById('complaintForm');
+        const compName = document.getElementById('compName');
+        const compContact = document.getElementById('compContact');
+        const compMsg = document.getElementById('compMsg');
+        const complaintStatus = document.getElementById('complaintStatus');
+        const API_BASE = 'https://thethirdspace-3.onrender.com';
+
+        if (complaintForm) {
+            complaintForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = compName.value.trim();
+                const contact = compContact.value.trim();
+                const message = compMsg.value.trim();
+                if (!name || !contact || !message) {
+                    complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> សូមបំពេញគ្រប់ព័ត៌មាន។';
+                    return;
+                }
+                try {
+                    const res = await fetch(`${API_BASE}/api/complaints`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, contact, message })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        complaintStatus.innerHTML = '<i class="fas fa-check-circle"></i> ✅ សូមអរគុណ! មតិរបស់អ្នកត្រូវបានកត់ត្រារួចរាល់។';
+                        complaintForm.reset();
+                        setTimeout(() => { complaintStatus.innerHTML = ''; }, 5000);
+                    } else throw new Error(data.detail);
+                } catch (err) {
+                    complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> កំហុសម៉ាស៊ីនបម្រើ។ សូមព្យាយាមម្តងទៀត។';
+                }
+            });
         }
-        try {
-          const res = await fetch(`${API_BASE}/api/complaints`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, contact, message })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            complaintStatus.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Thank you! Your feedback has been recorded.';
-            complaintForm.reset();
-            setTimeout(() => { complaintStatus.innerHTML = ''; }, 5000);
-          } else throw new Error(data.detail);
-        } catch (err) {
-          complaintStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Server error. Please try again.';
-        }
-      });
-    }
+
+        // Full Cart System (unchanged from original)
         (function () {
             let cart = [];
             function parsePrice(priceStr) { let m = priceStr.match(/[\d\.]+/); return m ? parseFloat(m[0]) : 0; }
@@ -633,7 +857,6 @@
             function loadCart() { const s = localStorage.getItem('thirdspace_cart'); if (s) { try { cart = JSON.parse(s); if (!Array.isArray(cart)) cart = []; } catch (e) { cart = []; } } else { cart = []; } updateCartCount(); }
             function updateCartCount() { const q = cart.reduce((s, i) => s + i.quantity, 0); const b = document.querySelector('.cart-count'); if (b) b.innerText = q; }
             function findCartIndex(n, p) { return cart.findIndex(i => i.name === n && Math.abs(i.price - p) < 0.01); }
-
             function addToCart(n, p) {
                 let idx = findCartIndex(n, p);
                 if (idx !== -1) cart[idx].quantity += 1;
@@ -641,10 +864,8 @@
                 persistCart();
                 if (document.getElementById('cartModal')?.style.display === 'flex') renderCartModal();
             }
-
             function removeCartItem(i) { cart.splice(i, 1); persistCart(); renderCartModal(); updateCartCount(); }
             function updateQuantity(i, d) { if (!cart[i]) return; let nq = cart[i].quantity + d; if (nq <= 0) removeCartItem(i); else { cart[i].quantity = nq; persistCart(); renderCartModal(); updateCartCount(); } }
-
             function renderCartModal() {
                 const c = document.getElementById('cartItemsContainer');
                 const ts = document.getElementById('cartTotalValue');
@@ -666,9 +887,7 @@
                 document.querySelectorAll('.qty-plus').forEach(b => b.addEventListener('click', (e) => updateQuantity(parseInt(b.dataset.index), 1)));
                 document.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', (e) => removeCartItem(parseInt(b.dataset.index))));
             }
-
             function escapeHtml(s) { return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
-
             function placeOrder() {
                 if (cart.length === 0) return;
                 const name = document.getElementById('custName')?.value.trim();
@@ -680,87 +899,28 @@
                 const formValues = { name: name, phone: phone, notes: notes };
                 const placeBtn = document.getElementById('placeOrderBtn');
                 if (placeBtn) placeBtn.disabled = true;
-                fetch('https://thethirdspace-3.onrender.com/api/orders', {
+                fetch(`${API_BASE}/api/orders`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ customer_name: name, phone: phone, notes: notes, items: orderItems })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        let summaryHtml = `
-    <div style="text-align:center; margin-bottom:15px;">
-        <i class="fas fa-check-circle" style="font-size:48px; color:#2b6e3c;"></i>
-        <h3 style="color:#2b6e3c; margin-top:10px;">✅ Order Confirmed!</h3>
-        <p style="color:#666; margin-top:5px;">Order #${data.order_id || 'N/A'}</p>
-    </div>
-    <div style="max-height:300px; overflow-y:auto; margin-bottom:15px;">
-        <table style="width:100%; border-collapse:collapse;">
-            <thead><tr style="border-bottom:2px solid #e6cfad;">
-                <th style="text-align:left; padding:8px;">Item</th>
-                <th style="text-align:center; padding:8px;">Qty</th>
-                <th style="text-align:right; padding:8px;">Price</th>
-                <th style="text-align:right; padding:8px;">Total</th>
-              </tr></thead>
-            <tbody>`;
-cart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
-    summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;">
-        <td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td>
-        <td style="text-align:center; padding:8px;">${item.quantity}</td>
-        <td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td>
-        <td style="text-align:right; padding:8px;">$${itemTotal.toFixed(2)}</td>
-     </tr>`;
-});
-summaryHtml += `
-            </tbody>
-            <tfoot><tr style="border-top:2px solid #e6cfad;">
-                <td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td>
-                <td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td>
-             </tr></tfoot>
-        </table>
-    </div>
-    <div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;">
-        <p><strong>👤 Customer:</strong> ${escapeHtml(formValues.name)}</p>
-        <p><strong>📞 Phone:</strong> ${escapeHtml(formValues.phone)}</p>
-        ${formValues.notes ? `<p><strong>📝 Notes:</strong> ${escapeHtml(formValues.notes)}</p>` : ''}
-    </div>
-    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-        <button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b; flex:1;">Continue Shopping</button>
-        <button id="viewHistoryBtn" class="place-order-btn" style="background:#5a3e2b; flex:1;"><i class="fas fa-history"></i> View Order History</button>
-    </div>
-`;
-                        cart.forEach(item => { const itemTotal = item.price * item.quantity; summaryHtml += `<tr style="border-bottom:1px solid #f0e0ca;"><td style="text-align:left; padding:8px;">${escapeHtml(item.name)}</td><td style="text-align:center; padding:8px;">${item.quantity}</td><td style="text-align:right; padding:8px;">$${item.price.toFixed(2)}</td><td style="text-align:right; padding:8px;">$${itemTotal.toFixed(2)}</td></tr>`; });
-                        summaryHtml += `</tbody><tfoot><tr style="border-top:2px solid #e6cfad;"><td colspan="3" style="text-align:right; padding:8px; font-weight:bold;">Total:</td><td style="text-align:right; padding:8px; font-weight:bold; color:#b2703a;">$${orderTotal.toFixed(2)}</td></tr></tfoot></table></div><div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;"><p><strong>👤 Customer:</strong> ${escapeHtml(formValues.name)}</p><p><strong>📞 Phone:</strong> ${escapeHtml(formValues.phone)}</p>${formValues.notes ? `<p><strong>📝 Notes:</strong> ${escapeHtml(formValues.notes)}</p>` : ''}</div><div style="text-align:center;"><button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b;">Continue Shopping</button></div>`;
-                        const modalContent = document.querySelector('.cart-modal-content');
-                        const originalContent = modalContent.innerHTML;
-                        modalContent.innerHTML = summaryHtml;
-                        document.getElementById('closeSuccessModal').onclick = () => {
-                            modalContent.innerHTML = originalContent;
-                            document.getElementById('cartModal').style.display = 'none';
-                            const closeBtn = document.getElementById('closeCartModalBtn');
-                            if (closeBtn) closeBtn.onclick = () => document.getElementById('cartModal').style.display = 'none';
-                            const placeOrderBtn = document.getElementById('placeOrderBtn');
-                            if (placeOrderBtn) placeOrderBtn.onclick = placeOrder;
-                        };
-
-                        document.getElementById('viewHistoryBtn').onclick = () => {
-                            window.location.href = `history.html?phone=${encodeURIComponent(formValues.phone)}`;
-                        };
-                        cart = [];
-                        persistCart();
-                        updateCartCount();
-                        const nameField = document.getElementById('custName');
-                        const phoneField = document.getElementById('custPhone');
-                        const notesField = document.getElementById('orderNotes');
-                        if (nameField) nameField.value = '';
-                        if (phoneField) phoneField.value = '';
-                        if (notesField) notesField.value = '';
-                        renderCartModal();
-                    })
-                    .catch(error => console.error('Order error:', error))
-                    .finally(() => { if (placeBtn) placeBtn.disabled = false; });
+                .then(response => response.json())
+                .then(data => {
+                    let summaryHtml = `<div style="text-align:center; margin-bottom:15px;"><i class="fas fa-check-circle" style="font-size:48px; color:#2b6e3c;"></i><h3 style="color:#2b6e3c;">✅ ការបញ្ជាទិញបានបញ្ជាក់!</h3><p>លេខបញ្ជា #${data.order_id || 'N/A'}</p></div><div style="max-height:300px; overflow-y:auto;"><table style="width:100%"><thead><tr><th>មុខម្ហូប</th><th>ចំនួន</th><th>សរុប</th></tr></thead><tbody>${cart.map(item => `<tr><td>${escapeHtml(item.name)}</td><td style="text-align:center">${item.quantity}</td><td>$${(item.price * item.quantity).toFixed(2)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2"><strong>សរុប</strong></td><td><strong>$${orderTotal.toFixed(2)}</strong></td></tr></tfoot></table></div><div style="background:#f9eedf; border-radius:1rem; padding:12px; margin:15px 0;"><p><strong>👤 ${escapeHtml(formValues.name)}</strong> | 📞 ${escapeHtml(formValues.phone)}</p>${formValues.notes ? `<p>📝 ${escapeHtml(formValues.notes)}</p>` : ''}</div><div style="display:flex; gap:12px;"><button id="closeSuccessModal" class="place-order-btn" style="background:#b45f2b;">បន្តការដើរទិញ</button><button id="viewHistoryBtn" class="place-order-btn" style="background:#5a3e2b;">មើលប្រវត្តិ</button></div>`;
+                    const modalContent = document.querySelector('.cart-modal-content');
+                    const originalContent = modalContent.innerHTML;
+                    modalContent.innerHTML = summaryHtml;
+                    document.getElementById('closeSuccessModal').onclick = () => { modalContent.innerHTML = originalContent; document.getElementById('cartModal').style.display = 'none'; const closeBtn = document.getElementById('closeCartModalBtn'); if (closeBtn) closeBtn.onclick = () => document.getElementById('cartModal').style.display = 'none'; document.getElementById('placeOrderBtn').onclick = placeOrder; };
+                    document.getElementById('viewHistoryBtn').onclick = () => window.location.href = `history.html?phone=${encodeURIComponent(formValues.phone)}`;
+                    cart = []; persistCart(); updateCartCount();
+                    const nameField = document.getElementById('custName'); if (nameField) nameField.value = '';
+                    const phoneField = document.getElementById('custPhone'); if (phoneField) phoneField.value = '';
+                    const notesField = document.getElementById('orderNotes'); if (notesField) notesField.value = '';
+                    renderCartModal();
+                })
+                .catch(error => console.error('Order error:', error))
+                .finally(() => { if (placeBtn) placeBtn.disabled = false; });
             }
-
             function buildUI() {
                 if (document.getElementById('cartFloatBtn')) return;
                 let float = document.createElement('div');
@@ -771,14 +931,13 @@ summaryHtml += `
                 let modal = document.createElement('div');
                 modal.id = 'cartModal';
                 modal.className = 'cart-modal';
-                modal.innerHTML = `<div class="cart-modal-content"><button class="close-modal" id="closeCartModalBtn">&times;</button><h2><i class="fas fa-coffee"></i> Your Order Basket</h2><div id="cartItemsContainer" class="cart-items-list"></div><div class="cart-total">Total: $<span id="cartTotalValue">0.00</span></div><div class="booking-form"><input type="text" id="custName" placeholder="Your full name *"><input type="tel" id="custPhone" placeholder="Phone / Telegram *"><textarea id="orderNotes" rows="2" placeholder="Special requests..."></textarea><button id="placeOrderBtn" class="place-order-btn">Confirm booking</button></div></div>`;
+                modal.innerHTML = `<div class="cart-modal-content"><button class="close-modal" id="closeCartModalBtn">&times;</button><h2><i class="fas fa-coffee"></i> កន្ត្រកបញ្ជាទិញរបស់អ្នក</h2><div id="cartItemsContainer" class="cart-items-list"></div><div class="cart-total">សរុប: $<span id="cartTotalValue">0.00</span></div><div class="booking-form"><input type="text" id="custName" placeholder="ឈ្មោះពេញរបស់អ្នក *"><input type="tel" id="custPhone" placeholder="លេខទូរស័ព្ទ / តេឡេក្រាម *"><textarea id="orderNotes" rows="2" placeholder="សំណើពិសេស..."></textarea><button id="placeOrderBtn" class="place-order-btn">បញ្ជាក់ការកក់</button></div></div>`;
                 document.body.appendChild(modal);
                 float.onclick = () => { renderCartModal(); modal.style.display = 'flex'; };
                 document.getElementById('closeCartModalBtn').onclick = () => modal.style.display = 'none';
                 window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
                 document.getElementById('placeOrderBtn').onclick = placeOrder;
             }
-
             function init() { loadCart(); buildUI(); updateCartCount(); }
             window.addEventListener('DOMContentLoaded', init);
         })();
