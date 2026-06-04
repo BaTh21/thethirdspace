@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import jwt
 from pydantic import BaseModel
 from typing import List
 import psycopg2
@@ -18,6 +19,9 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 CAMBODIA_TZ = timezone(timedelta(hours=7))
+JWT_SECRET = os.environ.get("JWT_SECRET", "your-very-secret-key-change-in-production")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRY_HOURS = 8
 
 admin_tokens = {}  # token -> expiry (datetime)
 
@@ -47,10 +51,22 @@ def verify_admin_token(authorization: str = Header(None)):
     scheme, _, token = authorization.partition(' ')
     if scheme.lower() != 'bearer':
         raise HTTPException(status_code=401, detail="Invalid auth scheme")
-    expiry = admin_tokens.get(token)
-    if not expiry or expiry < datetime.now(CAMBODIA_TZ):
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return token
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        # Optionally check that the subject is 'admin'
+        if payload.get("sub") != "admin":
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return token
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+def create_admin_token() -> str:
+    payload = {
+        "sub": "admin",
+        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRY_HOURS)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 # ============================================
 # Pydantic Models
@@ -197,7 +213,7 @@ async def get_order_history(phone: str):
 @app.post("/api/admin/login")
 async def admin_login(login: AdminLogin):
     if login.username == ADMIN_USERNAME and login.password == ADMIN_PASSWORD:
-        token = generate_admin_token()
+        token = create_admin_token()
         return {"token": token, "message": "Login successful"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
