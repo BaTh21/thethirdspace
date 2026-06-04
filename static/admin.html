@@ -362,7 +362,6 @@
 </div>
 
 <script>
-    // Use relative API path (works when backend serves frontend)
     const API_BASE = 'https://thethirdspace-3.onrender.com';
     let authToken = null;
 
@@ -493,7 +492,7 @@
                 </tr>
             `;
         }
-        tableHtml += `</tbody>}</table>`;
+        tableHtml += `</tbody></table>`;
         container.innerHTML = tableHtml;
     }
 
