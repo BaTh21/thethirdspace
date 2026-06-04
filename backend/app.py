@@ -324,7 +324,7 @@ async def submit_complaint(complaint: ComplaintCreate):
 async def get_all_complaints(token: str = Depends(verify_admin_token)):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, contact, message, created_at FROM complaints ORDER BY created_at DESC")
+    cur.execute("SELECT id, name, contact, message, created_at FROM complaints ORDER BY created_at ASC")
     rows = cur.fetchall()
     complaints = []
     for row in rows:
